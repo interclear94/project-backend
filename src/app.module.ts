@@ -5,6 +5,7 @@ import { BoardModule } from './board/board.module';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { Board } from './board/entities/board.entity';
 import { User } from './users/entities/users.entity';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [BoardModule, SequelizeModule.forRoot({
@@ -17,7 +18,7 @@ import { User } from './users/entities/users.entity';
     sync:{force: false},
     autoLoadModels : true,
     synchronize : true
-  })],
+  }), UsersModule],
   controllers: [AppController],
   providers: [AppService],
 })
