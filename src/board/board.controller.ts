@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { BoardService } from './board.service';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { UpdateBoardDto } from './dto/update-board.dto';
@@ -14,18 +14,48 @@ export class BoardController {
   @ApiOperation({summary : "create new board"})
   @ApiResponse({status: 201, description: "게시물 생성 성공", type: Board})
   @ApiBody({type: CreateBoardDto})
-  create(@Body() createBoardDto: CreateBoardDto) {
-    return this.boardService.create(createBoardDto);
+  async create(@Body() createBoardDto: CreateBoardDto) {
+    return await this.boardService.create(createBoardDto);
   }
 
   @Get()
-  findAll() {
-    return this.boardService.findAll();
+  async findAll(
+    @Query('limit') limit: string = '10',
+    @Query('offset') offset: string = '0'
+  ): Promise<Board[]> {
+    let parsedLimit : number = Number(limit);
+    let parsedOffset : number = Number(offset);
+    return this.boardService.findAll(parsedLimit, parsedOffset);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.boardService.findOne(+id);
+  @Get('/free')
+  async showFreeBoard(
+    @Query('limit') limit: string = '10',
+    @Query('offset') offset : string = '0'
+  ) : Promise<Board[]> {
+    let parsedLimit : number = Number(limit);
+    let parsedOffset : number = Number(offset);
+    return this.boardService.getCategoryContent('free', parsedLimit, parsedOffset);
+  }
+
+   @Get('/jmt')
+  async showJmtBoard(
+    @Query('limit') limit: string = '10',
+    @Query('offset') offset : string = '0'
+  ) : Promise<Board[]> {
+    let parsedLimit : number = Number(limit);
+    let parsedOffset : number = Number(offset);
+    return this.boardService.getCategoryContent('jmt', parsedLimit, parsedOffset);
+  }
+
+  @Get('/review') 
+  async showReviewBoard(
+    @Query('limit') limit: string = '10',
+    @Query('offset') offset : string = '0'
+  ) : Promise<Board[]> {
+    let parsedLimit : number = Number(limit);
+    let parsedOffset : number = Number(offset);
+    return this.boardService.getCategoryContent('review', parsedLimit, parsedOffset);
   }
 
   @Patch(':id')

@@ -17,17 +17,37 @@ export class BoardService {
   // DTO로 받아와서 메서드로 sql에 저장
   async create(createBoardDto: CreateBoardDto): Promise<Board> {
     const {boardTitle, boardContent, uid, unickname, boardFile, category} = createBoardDto;
-    return this.BoardEntity.create({
-      boardTitle, boardContent, uid, unickname, boardFile, categiries:category
+    return await this.BoardEntity.create({
+      boardTitle, boardContent, uid, unickname, boardFile, categories:category
     })
   }
 
-  findAll() {
-    return `This action returns all board`;
+  async findAll(limit : number, offset : number): Promise<Board[]> {
+    const safeLimit : number  = Number.isNaN(limit) || limit < 1 ? 10 : limit;
+    const safeOffset : number = Number.isNaN(offset) || offset < 0 ? 0 : offset;
+    return await this.BoardEntity.findAll({
+      limit : safeLimit,
+      offset : safeOffset,
+      order: [
+        ['createdAt', 'DESC']
+      ]
+    })
   }
 
   findOne(id: number) {
     return `This action returns a #${id} board`;
+  }
+
+  async getCategoryContent(categories : string, limit : number, offset : number) : Promise<Board[]> {
+    const safeLimit : number  = Number.isNaN(limit) || limit < 1 ? 10 : limit;
+    const safeOffset : number = Number.isNaN(offset) || offset < 0 ? 0 : offset;
+    
+    return await this.BoardEntity.findAll({
+      where: {categories},
+      limit: safeLimit,
+      offset : safeOffset,
+      order: [['createdAt', 'DESC']]
+    })
   }
 
   update(id: number, updateBoardDto: UpdateBoardDto) {

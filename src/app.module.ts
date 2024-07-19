@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { BoardModule } from './board/board.module';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { DetailPageModule } from './detail-page/detail-page.module';
 
 @Module({
   imports: [BoardModule, SequelizeModule.forRoot({
@@ -15,7 +16,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
     sync:{force: false},
     autoLoadModels : true,
     synchronize : true
-  })],
+  }), DetailPageModule],
   controllers: [AppController],
   providers: [AppService],
 })

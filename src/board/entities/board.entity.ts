@@ -1,7 +1,7 @@
 // 게시판 테이블 생성
 
-import { AutoIncrement, BelongsTo, Column, DataType, ForeignKey, Model, PrimaryKey, Table } from "sequelize-typescript"
-import { User } from "src/users/entities/users.entity"
+import { AutoIncrement, BelongsTo, Column, DataType, ForeignKey, HasMany, Model, PrimaryKey, Table } from "sequelize-typescript"
+import { Comment } from "./board.comment.entity";
 
 @Table({
     tableName: "board",
@@ -41,7 +41,7 @@ export class Board extends Model<Board> {
     boardView!: string;
 
     // 유저 아이디
-    @ForeignKey(()=> User)
+    // @ForeignKey(()=> User)
     @Column({
         type: DataType.STRING,
         allowNull: false,
@@ -49,7 +49,7 @@ export class Board extends Model<Board> {
     uid!: string;
 
     // 유저 닉네임
-    @ForeignKey(()=> User)
+    // @ForeignKey(()=> User)
     @Column({
         type: DataType.STRING,
         allowNull: false,
@@ -61,20 +61,24 @@ export class Board extends Model<Board> {
         type: DataType.STRING,
         allowNull: false,
     })
-    categiries: string;
+    categories!: string;
 
     // 파일
     @Column({
         type: DataType.STRING,
         allowNull: true,
     })
-    boardFile: string;
+    boardFile?: string;
 
     // User table의 uid와 Borad table의 uid를 연결
-    @BelongsTo(() => User, { foreignKey: 'uid' })
-    user!: User;
+    // @BelongsTo(() => User, { foreignKey: 'uid' })
+    // user!: User;
 
 
-    @BelongsTo(() => User, { foreignKey: 'unickname' })
-    userNickname!: User;
+    // @BelongsTo(() => User, { foreignKey: 'unickname' })
+    // userNickname!: User;
+
+    // 본문과 댓글 연결
+    @HasMany(()=> Comment)
+    comments!:Comment[];
 }
