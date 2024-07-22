@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Res, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Res, BadRequestException, InternalServerErrorException } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
@@ -24,7 +24,7 @@ export class CommentController {
     ): Promise<Response> {
     try {
       const boardId = Number(id);
-      this.commentService.create(createCommentDto, category, boardId);
+      await this.commentService.create(createCommentDto, category, boardId);
       return res.status(201).json({message : "댓글 생성 성공", category, id})
     } catch (err) {
       console.log("comment.controller.ts -> create")
@@ -48,30 +48,47 @@ export class CommentController {
     const boardId = Number(id);
     const parsedLimit = Number(limit);
     const parsedOffset = Number(offset)
-    return this.commentService.findAll(boardId, category, parsedLimit, parsedOffset);
+    try {
+      return await this.commentService.findAll(boardId, category, parsedLimit, parsedOffset);
+    } catch(err) {
+      throw new InternalServerErrorException(err.message);
+    }
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.commentService.findOne(+id);
-  }
+  // @Get(':id')
+  // findOne(@Param('id') id: string) {
+  //   return this.commentService.findOne(+id);
+  // }
 
   @Patch(':id/replyUpdate')
   @ApiOperation({summary : "댓글 수정"})
   @ApiResponse({status :201, description: "댓글 수정 성공", type: [Reply]})
   @ApiBody({type : UpdateCommentDto})
-  update(
+  async update(
     @Query('id') id: string,
-    @Body() updateCommentDto: UpdateCommentDto
+    @Body() updateCommentDto: UpdateCommentDto,
+    @Res() res: Response,
+    @Param('categort') category : string,
   ) {
     const boardId = Number(id);
-    return this.commentService.update(boardId, updateCommentDto);
+    try {
+      await this.commentService.update(boardId, updateCommentDto);
+      res.status(201).json({message: "게시물 수정 완료", boardId, category})
+    } catch(err) {
+      throw new InternalServerErrorException(err.message);
+    }
   }
 
   @Delete(':id/replyDelete')
   @ApiOperation({summary : "댓글 삭제"})
   @ApiResponse({status:201, description: "댓글 삭제 완료"})
-  remove(@Param('id') id: string) {
-    return this.commentService.softRemove(+id);
+  async remove(@Query('id') id: string, @Param('category') category : string, @Res() res: Response) : Promise<Response> {
+    try {
+      const parsedId = Number(id);
+      await this.commentService.softRemove(parsedId);
+      return res.status(200).json({message: "게시물 삭제 완료", parsedId, category})
+    } catch(err) {
+      throw new InternalServerErrorException(err.message);
+    }
   }
 }

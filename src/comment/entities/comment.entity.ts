@@ -41,7 +41,6 @@ export class Reply extends Model<Reply>{
      boardId!: number
 
      // 카테고리
-     @ForeignKey(()=>Board)
      @Column({
         type: DataType.STRING,
         allowNull: false

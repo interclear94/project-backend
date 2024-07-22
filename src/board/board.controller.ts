@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Res, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Res, BadRequestException, InternalServerErrorException } from '@nestjs/common';
 import { BoardService } from './board.service';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { UpdateBoardDto } from './dto/update-board.dto';
@@ -27,7 +27,7 @@ export class BoardController {
     }
   }
 
-  @Get(':category/see')
+  @Get(':category')
   @ApiOperation({summary: "게시판 조회"})
   @ApiResponse({status: 200, description: "게시물 조회 성공", type: [Board]})
   async findAll(  
@@ -37,7 +37,11 @@ export class BoardController {
   ): Promise<Board[]> {
     let parsedLimit : number = Number(limit);
     let parsedOffset : number = Number(offset);
-    return this.boardService.findAll(parsedLimit, parsedOffset, category);
+    try {
+      return this.boardService.findAll(parsedLimit, parsedOffset, category);
+    } catch (err) {
+      throw new InternalServerErrorException (err.message);
+    }
   }
 
   @Patch(':id')
