@@ -35,8 +35,10 @@ export class DetailPageController {
     return this.detailPageService.update(+id, updateDetailPageDto);
   }
 
-  @Delete(':id')
+
+  @Delete(':id/postDelete')
+  @ApiOperation({summary : "게시물 삭제"})
   remove(@Param('id') id: string) {
-    return this.detailPageService.remove(+id);
+    return this.detailPageService.softRemove(+id);
   }
 }

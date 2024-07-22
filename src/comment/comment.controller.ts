@@ -68,8 +68,10 @@ export class CommentController {
     return this.commentService.update(boardId, updateCommentDto);
   }
 
-  @Delete(':id')
+  @Delete(':id/replyDelete')
+  @ApiOperation({summary : "댓글 삭제"})
+  @ApiResponse({status:201, description: "댓글 삭제 완료"})
   remove(@Param('id') id: string) {
-    return this.commentService.remove(+id);
+    return this.commentService.softRemove(+id);
   }
 }

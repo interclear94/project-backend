@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { InjectModel } from '@nestjs/sequelize';
@@ -62,7 +62,12 @@ export class CommentService {
     return comment.update({replyContent, replyFile});
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} comment`;
+  async softRemove(id: number): Promise<void> {
+    const numberOfAffectedRows = await this.ReplyEntity.destroy({
+      where : {id}
+    })
+    if (numberOfAffectedRows === 0) {
+      throw new NotFoundException("댓글을 찾을 수 없습니다.");
+    }
   }
 }

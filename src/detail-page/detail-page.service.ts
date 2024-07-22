@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateDetailPageDto } from './dto/create-detail-page.dto';
 import { UpdateDetailPageDto } from './dto/update-detail-page.dto';
 import { Board } from 'src/board/entities/board.entity';
@@ -41,7 +41,13 @@ export class DetailPageService {
     return content.update(updateData)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} detailPage`;
+  async softRemove(id: number): Promise<void>{
+    const affectedRows = await this.BoardEntity.destroy({
+      where: {id}
+    })
+
+    if(affectedRows === 0) {
+      throw new NotFoundException("게시물을 찾을 수 없습니다.")
+    }
   }
 }
