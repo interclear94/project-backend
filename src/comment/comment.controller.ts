@@ -1,15 +1,22 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
+import { Reply } from './entities/comment.entity';
 
-@Controller('comment')
+@Controller('board/:category')
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
-  @Post()
-  create(@Body() createCommentDto: CreateCommentDto) {
-    return this.commentService.create(createCommentDto);
+  @Post(':id')
+  async create(
+    @Body() createCommentDto: CreateCommentDto,
+    @Param('category') category : string,
+    @Query('id') id : string,
+    @Body('parentId') parentId?: number,
+    ): Promise<Reply> {
+    const boardId = Number(id);
+    return this.commentService.create(createCommentDto, category, boardId, parentId);
   }
 
   @Get()

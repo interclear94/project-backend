@@ -11,7 +11,7 @@ export class CommentService {
   ) {}
 
 
-  async create(createCommentDto: CreateCommentDto, parentId?:number) : Promise<Reply> {
+  async create(createCommentDto: CreateCommentDto, category:string, boardId:number, parentId?:number,) : Promise<Reply> {
     const {uid, unickname, replyContent, commentImg} = createCommentDto;
     return this.ReplyEntity.create({
 

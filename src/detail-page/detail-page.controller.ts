@@ -4,7 +4,7 @@ import { CreateDetailPageDto } from './dto/create-detail-page.dto';
 import { UpdateDetailPageDto } from './dto/update-detail-page.dto';
 import { Board } from 'src/board/entities/board.entity';
 
-@Controller('board')
+@Controller('board/:category')
 export class DetailPageController {
   constructor(private readonly detailPageService: DetailPageService) {}
 
@@ -13,12 +13,13 @@ export class DetailPageController {
     return this.detailPageService.create(createDetailPageDto);
   }
 
-  @Get(":category")
+  @Get(":id")
   async getDetailPage(
-    @Param("free") category: string,
-    @Query("id") id: number
+    @Param("category") category: string,
+    @Query("id") id: string
   ): Promise<Board> {
-    return this.detailPageService.getContent(id, category);
+    const parsedId = Number(id);
+    return this.detailPageService.getContent(parsedId, category);
   }
 
 

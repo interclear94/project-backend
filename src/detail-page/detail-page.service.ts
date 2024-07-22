@@ -3,7 +3,6 @@ import { CreateDetailPageDto } from './dto/create-detail-page.dto';
 import { UpdateDetailPageDto } from './dto/update-detail-page.dto';
 import { Board } from 'src/board/entities/board.entity';
 import { InjectModel } from '@nestjs/sequelize';
-import { Reply } from 'src/comment/entities/comment.entity';
 
 @Injectable()
 export class DetailPageService {
@@ -21,7 +20,7 @@ export class DetailPageService {
   }
 
   getContent(id: number, category:string) {
-    return this.BoardEntity.findOne({ where : {id, categories : category}, include:[Reply] })
+    return this.BoardEntity.findOne({ where : {id, categories : category}})
   }
 
   update(id: number, updateDetailPageDto: UpdateDetailPageDto) {

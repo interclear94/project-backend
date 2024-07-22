@@ -8,5 +8,6 @@ import { Board } from './entities/board.entity';
   imports: [SequelizeModule.forFeature([Board])],
   controllers: [BoardController],
   providers: [BoardService],
+  exports:[BoardModule]
 })
 export class BoardModule {}
