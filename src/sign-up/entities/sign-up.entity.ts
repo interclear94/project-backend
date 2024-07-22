@@ -1,1 +1,3 @@
-export class SignUp {}
+export class SignUp {
+    
+}
