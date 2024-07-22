@@ -27,7 +27,7 @@ export class DetailPageController {
   }
 
 
-  @Patch(':id/update')
+  @Patch(':id/postUpdate')
   @ApiOperation({summary: "게시물 수정"})
   @ApiResponse({status:201, description: "게시물 수정 완료"})
   @ApiBody({type: UpdateDetailPageDto})

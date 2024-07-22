@@ -28,8 +28,17 @@ export class DetailPageService {
     if(!content) {
       throw new Error("Post does not exist");
     }
+    
+    const {boardFile, boardContent, boardTitle} = updateDetailPageDto;
 
-    return content.update(updateDetailPageDto)
+    const updateData = {
+      boardFile : boardFile !== undefined ? boardFile : content.boardContent,
+      boardTitle : boardTitle !== undefined ? boardTitle : content.boardTitle,
+      boardContent : boardContent !== undefined ? boardContent : content.boardContent
+    }
+    
+
+    return content.update(updateData)
   }
 
   remove(id: number) {

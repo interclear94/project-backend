@@ -3,7 +3,7 @@ import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { Reply } from './entities/comment.entity';
-import { ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 
 @ApiTags("댓글 API")
@@ -12,16 +12,10 @@ export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
   
-  @Post(':id/comment')
+  @Post(':id/replyCreate')
   @ApiOperation({summary : "댓글 작성"})
   @ApiResponse({status: 201, description: "댓글 생성 성공"})
   @ApiBody({type: CreateCommentDto})
-  @ApiQuery({
-    name: "id",
-    type: String,
-    description: "글 번호",
-    example: "1"
-  })
   async create(
     @Body() createCommentDto: CreateCommentDto,
     @Param('category') category : string,
@@ -41,9 +35,20 @@ export class CommentController {
     }
   }
 
-  @Get()
-  findAll() {
-    return this.commentService.findAll();
+  // 댓글 불러오기
+  @Get(':id')
+  @ApiOperation({summary : "댓글 조회"})
+  @ApiResponse({status: 200, description: "댓글 조회 성공", type: [Reply]})
+  async findAll(
+    @Query('limit') limit: string = '10',
+    @Query('offset') offset: string = '0',
+    @Query('id') id: string,
+    @Param('category') category : string
+  ) : Promise<Reply[]> {
+    const boardId = Number(id);
+    const parsedLimit = Number(limit);
+    const parsedOffset = Number(offset)
+    return this.commentService.findAll(boardId, category, parsedLimit, parsedOffset);
   }
 
   @Get(':id')
@@ -51,9 +56,16 @@ export class CommentController {
     return this.commentService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto) {
-    return this.commentService.update(+id, updateCommentDto);
+  @Patch(':id/replyUpdate')
+  @ApiOperation({summary : "댓글 수정"})
+  @ApiResponse({status :201, description: "댓글 수정 성공", type: [Reply]})
+  @ApiBody({type : UpdateCommentDto})
+  update(
+    @Query('id') id: string,
+    @Body() updateCommentDto: UpdateCommentDto
+  ) {
+    const boardId = Number(id);
+    return this.commentService.update(boardId, updateCommentDto);
   }
 
   @Delete(':id')

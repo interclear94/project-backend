@@ -26,16 +26,40 @@ export class CommentService {
     }
   }
 
-  findAll() {
-    return `This action returns all comment`;
+  async findAll(boardId: number, category: string, limit: number, offset: number): Promise<Reply[]> {
+    const safeLimit : number  = Number.isNaN(limit) || limit < 1 ? 10 : limit;
+    const safeOffset : number = Number.isNaN(offset) || offset < 0 ? 0 : offset;
+
+    return await this.ReplyEntity.findAll({
+      where: {boardId, category, parentId: null},
+      limit : safeLimit,
+      offset : safeOffset,
+      order: [['createdAt', 'DESC']],
+      include: [{
+        model: Reply,
+        as: 'replies',
+        required: false
+      }]
+    })
   }
 
   findOne(id: number) {
     return `This action returns a #${id} comment`;
   }
 
-  update(id: number, updateCommentDto: UpdateCommentDto) {
-    return `This action updates a #${id} comment`;
+  async update(boardId: number, updateCommentDto: UpdateCommentDto): Promise<Reply> {
+    let {replyContent, id : replyId, replyFile} = updateCommentDto
+    const comment = await this.ReplyEntity.findByPk(replyId);
+
+    if(!replyFile && comment.replyFile) {
+      replyFile = comment.replyFile
+    }
+
+    if(!comment) {
+      throw new Error("reply does not exist");
+    }
+
+    return comment.update({replyContent, replyFile});
   }
 
   remove(id: number) {

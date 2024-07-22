@@ -1,4 +1,4 @@
-import { AutoIncrement, BelongsTo, Column, DataType, ForeignKey, Model, PrimaryKey, Table } from "sequelize-typescript";
+import { AutoIncrement, BelongsTo, Column, DataType, ForeignKey, HasMany, Model, PrimaryKey, Table } from "sequelize-typescript";
 import { Board } from "src/board/entities/board.entity";
 
 
@@ -74,6 +74,10 @@ export class Reply extends Model<Reply>{
      @BelongsTo(()=>Board)
      board!: Board;
  
-     @BelongsTo(()=>Reply)
-     replies!:Comment[];
+
+     @BelongsTo(()=>Reply, {as : 'parentReply', foreignKey: 'parentId'})
+     preantReply!:Reply;
+
+     @HasMany(()=>Reply, {as : "replies", foreignKey: 'parentId'})
+     replies: Reply[]; 
 }

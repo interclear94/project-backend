@@ -11,7 +11,7 @@ import { Response } from 'express';
 export class BoardController {
   constructor(private readonly boardService: BoardService) {}
 
-  @Post(':category/create')
+  @Post(':category/postCreate')
   @ApiOperation({summary : "create new board"})
   @ApiResponse({status: 201, description: "게시물 생성 성공", type: Board})
   @ApiBody({type: CreateBoardDto})
@@ -30,12 +30,6 @@ export class BoardController {
   @Get(':category/see')
   @ApiOperation({summary: "게시판 조회"})
   @ApiResponse({status: 200, description: "게시물 조회 성공", type: [Board]})
-  @ApiParam({
-    name: 'category',
-    type: String,
-    description: "게시판 카테고리",
-    example: "free"
-  })
   async findAll(  
     @Query('limit') limit: string = '10',
     @Query('offset') offset: string = '0',
