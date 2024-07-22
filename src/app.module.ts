@@ -10,7 +10,7 @@ import { UsersModule } from './users/users.module';
 @Module({
   imports: [BoardModule, SequelizeModule.forRoot({
     dialect: "mysql",
-    host: "3.36.154.200",
+    host: "localhost",
     port: 3306,
     username: "admin", // 나중에 수정
     password: "admin1234", // 나중에 수정
