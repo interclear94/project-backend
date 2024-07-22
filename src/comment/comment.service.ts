@@ -11,11 +11,19 @@ export class CommentService {
   ) {}
 
 
-  async create(createCommentDto: CreateCommentDto, category:string, boardId:number, parentId?:number,) : Promise<Reply> {
-    const {uid, unickname, replyContent, commentImg} = createCommentDto;
-    return this.ReplyEntity.create({
-
-    })
+  // 댓글 생성
+  async create(createCommentDto: CreateCommentDto, category:string, boardId:number) : Promise<Reply> {
+    try {
+      const { uid, unickname, replyContent, replyFile, parentId } = createCommentDto;
+      return await this.ReplyEntity.create({
+        uid, unickname, boardId, replyContent, replyFile, category, parentId
+      })
+    } catch (err) {
+      if(err.name === "SequelizeForeignKeyConstraintError"){
+        throw new Error("ForeignKeyConstraintError");
+      }
+      throw err;
+    }
   }
 
   findAll() {

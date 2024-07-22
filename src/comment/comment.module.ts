@@ -9,5 +9,6 @@ import { Reply } from './entities/comment.entity';
   imports: [DetailPageModule, SequelizeModule.forFeature([Reply])],
   controllers: [CommentController],
   providers: [CommentService],
+  exports: [CommentModule]
 })
 export class CommentModule {}

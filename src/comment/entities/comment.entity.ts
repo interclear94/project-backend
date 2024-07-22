@@ -38,14 +38,22 @@ export class Reply extends Model<Reply>{
          type: DataType.INTEGER,
          allowNull: false
      })
-     contentId : number
+     boardId!: number
+
+     // 카테고리
+     @ForeignKey(()=>Board)
+     @Column({
+        type: DataType.STRING,
+        allowNull: false
+     })
+     category!: string
  
      // 댓글 내용
      @Column({
          type: DataType.STRING,
          allowNull:false
      })
-     comment:string
+     replyContent!:string
  
      // 부모 댓글
      @ForeignKey(()=> Reply)
@@ -60,7 +68,7 @@ export class Reply extends Model<Reply>{
          type: DataType.STRING,
          allowNull: true
      })
-     commentImg?: string
+     replyFile?: string
  
      // 본문과 댓글 연결
      @BelongsTo(()=>Board)

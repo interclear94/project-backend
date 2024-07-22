@@ -16,18 +16,25 @@ export class BoardService {
 
   // DTO로 받아와서 메서드로 sql에 저장
   async create(createBoardDto: CreateBoardDto, category:string): Promise<Board> {
-    const {boardTitle, boardContent, uid, unickname, boardFile} = createBoardDto;
-    return this.BoardEntity.create({
-      boardTitle, boardContent, uid, unickname, boardFile, categories:category
-    })
+    try {
+      const { boardTitle, boardContent, uid, unickname, boardFile } = createBoardDto;
+      return await this.BoardEntity.create({
+        boardTitle, boardContent, uid, unickname, boardFile, categories: category
+      })
+    } catch (err) {
+      if(err.message === "SequelizeForeignKeyConstraintError") {
+        throw new Error("ForeignKeyConstraintError");
+      }
+      throw err;
+    }
   }
 
   // 모든 게시물을 가져온다.
   async findAll(limit : number, offset : number, category?: string): Promise<Board[]> {
     const safeLimit : number  = Number.isNaN(limit) || limit < 1 ? 10 : limit;
     const safeOffset : number = Number.isNaN(offset) || offset < 0 ? 0 : offset;
-
-    const whereCondition : any = category ? {category} : {}; 
+    category = category.trim();
+    const whereCondition : any = category ? {categories:category} : {}; 
 
     return await this.BoardEntity.findAll({
       where : whereCondition,
@@ -43,17 +50,6 @@ export class BoardService {
     return `This action returns a #${id} board`;
   }
 
-  // async getCategoryContent(categories : string, limit : number, offset : number) : Promise<Board[]> {
-  //   const safeLimit : number  = Number.isNaN(limit) || limit < 1 ? 10 : limit;
-  //   const safeOffset : number = Number.isNaN(offset) || offset < 0 ? 0 : offset;
-    
-  //   return await this.BoardEntity.findAll({
-  //     where: {categories},
-  //     limit: safeLimit,
-  //     offset : safeOffset,
-  //     order: [['createdAt', 'DESC']]
-  //   })
-  // }
 
   update(id: number, updateBoardDto: UpdateBoardDto) {
     return `This action updates a #${id} board`;
