@@ -107,15 +107,15 @@ jobs: # 작업의 단위
             pwd
             npm install
 
-      - name: deploy to ec2
-        uses: appleboy/ssh-action@v1.0.3 # pm2 kill 중단이 되버린다.
-        ## 무중단 배포
-        ## pm2 reload 어플리케이션이 중단 없이 새로운 코드의 내용을 다시 가져온다.
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.AWS_SECRET_KEY }}
-          port: ${{ secrets.PORT }}
-          script: | 
-            cd /home/ubuntu
-            pm2 reload system.config.js
+      # - name: deploy to ec2
+      #   uses: appleboy/ssh-action@v1.0.3 # pm2 kill 중단이 되버린다.
+      #   ## 무중단 배포
+      #   ## pm2 reload 어플리케이션이 중단 없이 새로운 코드의 내용을 다시 가져온다.
+      #   with:
+      #     host: ${{ secrets.HOST }}
+      #     username: ${{ secrets.USERNAME }}
+      #     key: ${{ secrets.AWS_SECRET_KEY }}
+      #     port: ${{ secrets.PORT }}
+      #     script: | 
+      #       cd /home/ubuntu
+      #       pm2 reload system.config.js
