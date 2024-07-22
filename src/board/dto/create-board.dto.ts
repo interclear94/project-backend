@@ -3,6 +3,5 @@ export class CreateBoardDto {
     boardContent : string
     uid : string;
     unickname : string;
-    category: string;
     boardFile?: string;
 }

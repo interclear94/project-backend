@@ -1,7 +1,7 @@
 // 게시판 테이블 생성
 
 import { AutoIncrement, BelongsTo, Column, DataType, ForeignKey, HasMany, Model, PrimaryKey, Table } from "sequelize-typescript"
-import { Comment } from "./board.comment.entity";
+import { Reply } from "src/comment/entities/comment.entity";
 
 @Table({
     tableName: "board",
@@ -79,6 +79,6 @@ export class Board extends Model<Board> {
     // userNickname!: User;
 
     // 본문과 댓글 연결
-    @HasMany(()=> Comment)
-    comments!:Comment[];
+    @HasMany(()=> Reply)
+    comments!:Reply[];
 }

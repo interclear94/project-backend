@@ -10,53 +10,54 @@ import { Board } from './entities/board.entity';
 export class BoardController {
   constructor(private readonly boardService: BoardService) {}
 
-  @Post()
+  @Post(':category/create')
   @ApiOperation({summary : "create new board"})
   @ApiResponse({status: 201, description: "게시물 생성 성공", type: Board})
   @ApiBody({type: CreateBoardDto})
-  async create(@Body() createBoardDto: CreateBoardDto) {
-    return await this.boardService.create(createBoardDto);
+  async create(@Body() createBoardDto: CreateBoardDto, @Param('category') category:string) {
+    return await this.boardService.create(createBoardDto, category);
   }
 
-  @Get()
-  async findAll(
+  @Get(':category')
+  async findAll(  
     @Query('limit') limit: string = '10',
-    @Query('offset') offset: string = '0'
+    @Query('offset') offset: string = '0',
+    @Param('category') category: string
   ): Promise<Board[]> {
     let parsedLimit : number = Number(limit);
     let parsedOffset : number = Number(offset);
-    return this.boardService.findAll(parsedLimit, parsedOffset);
+    return this.boardService.findAll(parsedLimit, parsedOffset, category);
   }
 
-  @Get('/free')
-  async showFreeBoard(
-    @Query('limit') limit: string = '10',
-    @Query('offset') offset : string = '0'
-  ) : Promise<Board[]> {
-    let parsedLimit : number = Number(limit);
-    let parsedOffset : number = Number(offset);
-    return this.boardService.getCategoryContent('free', parsedLimit, parsedOffset);
-  }
+  // @Get('/free')
+  // async showFreeBoard(
+  //   @Query('limit') limit: string = '10',
+  //   @Query('offset') offset : string = '0'
+  // ) : Promise<Board[]> {
+  //   let parsedLimit : number = Number(limit);
+  //   let parsedOffset : number = Number(offset);
+  //   return this.boardService.getCategoryContent('free', parsedLimit, parsedOffset);
+  // }
 
-   @Get('/jmt')
-  async showJmtBoard(
-    @Query('limit') limit: string = '10',
-    @Query('offset') offset : string = '0'
-  ) : Promise<Board[]> {
-    let parsedLimit : number = Number(limit);
-    let parsedOffset : number = Number(offset);
-    return this.boardService.getCategoryContent('jmt', parsedLimit, parsedOffset);
-  }
+  //  @Get('/jmt')
+  // async showJmtBoard(
+  //   @Query('limit') limit: string = '10',
+  //   @Query('offset') offset : string = '0'
+  // ) : Promise<Board[]> {
+  //   let parsedLimit : number = Number(limit);
+  //   let parsedOffset : number = Number(offset);
+  //   return this.boardService.getCategoryContent('jmt', parsedLimit, parsedOffset);
+  // }
 
-  @Get('/review') 
-  async showReviewBoard(
-    @Query('limit') limit: string = '10',
-    @Query('offset') offset : string = '0'
-  ) : Promise<Board[]> {
-    let parsedLimit : number = Number(limit);
-    let parsedOffset : number = Number(offset);
-    return this.boardService.getCategoryContent('review', parsedLimit, parsedOffset);
-  }
+  // @Get('/review') 
+  // async showReviewBoard(
+  //   @Query('limit') limit: string = '10',
+  //   @Query('offset') offset : string = '0'
+  // ) : Promise<Board[]> {
+  //   let parsedLimit : number = Number(limit);
+  //   let parsedOffset : number = Number(offset);
+  //   return this.boardService.getCategoryContent('review', parsedLimit, parsedOffset);
+  // }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateBoardDto: UpdateBoardDto) {
