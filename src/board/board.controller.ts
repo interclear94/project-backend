@@ -15,12 +15,6 @@ export class BoardController {
   @ApiOperation({summary : "create new board"})
   @ApiResponse({status: 201, description: "게시물 생성 성공", type: Board})
   @ApiBody({type: CreateBoardDto})
-  @ApiParam({
-    name: 'category',
-    type: String,
-    description: "자게 글 생성",
-    example: 'free'
-  })
   async create(@Body() createBoardDto: CreateBoardDto, @Param('category') category:string, @Res() res : Response) : Promise<Response> {
     try {
       await this.boardService.create(createBoardDto, category);

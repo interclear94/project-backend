@@ -23,8 +23,13 @@ export class DetailPageService {
     return this.BoardEntity.findOne({ where : {id, categories : category}})
   }
 
-  update(id: number, updateDetailPageDto: UpdateDetailPageDto) {
-    return `This action updates a #${id} detailPage`;
+  async update(id: number, updateDetailPageDto: Partial<UpdateDetailPageDto>) : Promise<Board> {
+    const content = await this.BoardEntity.findByPk(id);
+    if(!content) {
+      throw new Error("Post does not exist");
+    }
+
+    return content.update(updateDetailPageDto)
   }
 
   remove(id: number) {
