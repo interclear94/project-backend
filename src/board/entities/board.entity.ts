@@ -70,6 +70,21 @@ export class Board extends Model<Board> {
     })
     boardFile?: string;
 
+    // 좋아요
+    @Column({
+        type : DataType.INTEGER,
+        allowNull : false
+    })
+    boardLike!: number;
+
+    // 댓글 수 저장
+    @Column({
+        type: DataType.INTEGER,
+        allowNull: false,
+        defaultValue : 0
+    })
+    numberOfComment : number;
+
     // User table의 uid와 Borad table의 uid를 연결
     // @BelongsTo(() => User, { foreignKey: 'uid' })
     // user!: User;

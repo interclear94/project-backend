@@ -66,8 +66,14 @@ export class CommentService {
     const numberOfAffectedRows = await this.ReplyEntity.destroy({
       where : {id}
     })
+    
+    
     if (numberOfAffectedRows === 0) {
       throw new NotFoundException("댓글을 찾을 수 없습니다.");
     }
+
+    
   }
+
+
 }
