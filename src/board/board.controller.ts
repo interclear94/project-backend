@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Res, BadRequestException, InternalServerErrorException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Res, InternalServerErrorException } from '@nestjs/common';
 import { BoardService } from './board.service';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { UpdateBoardDto } from './dto/update-board.dto';
-import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Board } from './entities/board.entity';
 import { Response } from 'express';
 
@@ -12,7 +12,7 @@ export class BoardController {
   constructor(private readonly boardService: BoardService) {}
 
   @Post(':category/postCreate')
-  @ApiOperation({summary : "create new board"})
+  @ApiOperation({summary : "게시물 생성"})
   @ApiResponse({status: 201, description: "게시물 생성 성공", type: Board})
   @ApiBody({type: CreateBoardDto})
   async create(@Body() createBoardDto: CreateBoardDto, @Param('category') category:string, @Res() res : Response) : Promise<Response> {
@@ -44,13 +44,13 @@ export class BoardController {
     }
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBoardDto: UpdateBoardDto) {
-    return this.boardService.update(+id, updateBoardDto);
-  }
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateBoardDto: UpdateBoardDto) {
+  //   return this.boardService.update(+id, updateBoardDto);
+  // }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.boardService.remove(+id);
-  }
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.boardService.remove(+id);
+  // }
 }

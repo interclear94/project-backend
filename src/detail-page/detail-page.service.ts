@@ -3,24 +3,34 @@ import { CreateDetailPageDto } from './dto/create-detail-page.dto';
 import { UpdateDetailPageDto } from './dto/update-detail-page.dto';
 import { Board } from 'src/board/entities/board.entity';
 import { InjectModel } from '@nestjs/sequelize';
+import { CommentService } from 'src/comment/comment.service';
+import { Reply } from 'src/comment/entities/comment.entity';
 
 @Injectable()
 export class DetailPageService {
   constructor(
     @InjectModel(Board)
-    private readonly BoardEntity: typeof Board
+    private readonly BoardEntity: typeof Board,
+    @InjectModel(Reply)
+    private readonly ReplyEntity: typeof Reply,
+    private readonly commentService: CommentService,
   ) {}
 
-  create(createDetailPageDto: CreateDetailPageDto) {
-    return 'This action adds a new detailPage';
-  }
+  // create(createDetailPageDto: CreateDetailPageDto) {
+  //   return 'This action adds a new detailPage';
+  // }
 
-  findAll() {
-    return `This action returns all detailPage`;
-  }
+  // findAll() {
+  //   return `This action returns all detailPage`;
+  // }
 
-  getContent(id: number, category:string) {
-    return this.BoardEntity.findOne({ where : {id, categories : category}})
+  async getContentAndReply(boardId: number, category:string, limit? : number, offset?:number) : Promise<{content: Board, reply: Reply[]}> {
+    const safeLimit : number  = Number.isNaN(limit) || limit < 1 ? 10 : limit;
+    const safeOffset : number = Number.isNaN(offset) || offset < 0 ? 0 : offset;
+    const content : Board = await this.BoardEntity.findOne({ where : {id : boardId, categories : category}})
+    const reply : Reply[]  = await this.commentService.findAll(boardId, category, safeLimit, safeOffset);
+
+    return {content, reply}
   }
 
   async update(id: number, updateDetailPageDto: Partial<UpdateDetailPageDto>) : Promise<Board> {
@@ -48,6 +58,10 @@ export class DetailPageService {
 
     if(affectedRows === 0) {
       throw new NotFoundException("게시물을 찾을 수 없습니다.")
+    } else{
+      await this.ReplyEntity.destroy({
+        where : {boardId : id}
+      })
     }
   }
 }

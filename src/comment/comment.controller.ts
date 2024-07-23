@@ -1,9 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Res, BadRequestException, InternalServerErrorException } from '@nestjs/common';
+import { Controller, Post, Body, Patch, Param, Delete, Query, Res, InternalServerErrorException } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { Reply } from './entities/comment.entity';
-import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 
 @ApiTags("댓글 API")
@@ -36,28 +36,23 @@ export class CommentController {
   }
 
   // 댓글 불러오기
-  @Get(':id')
-  @ApiOperation({summary : "댓글 조회"})
-  @ApiResponse({status: 200, description: "댓글 조회 성공", type: [Reply]})
-  async findAll(
-    @Query('limit') limit: string = '10',
-    @Query('offset') offset: string = '0',
-    @Query('id') id: string,
-    @Param('category') category : string
-  ) : Promise<Reply[]> {
-    const boardId = Number(id);
-    const parsedLimit = Number(limit);
-    const parsedOffset = Number(offset)
-    try {
-      return await this.commentService.findAll(boardId, category, parsedLimit, parsedOffset);
-    } catch(err) {
-      throw new InternalServerErrorException(err.message);
-    }
-  }
-
   // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.commentService.findOne(+id);
+  // @ApiOperation({summary : "댓글 조회"})
+  // @ApiResponse({status: 200, description: "댓글 조회 성공", type: [Reply]})
+  // async findAll(
+  //   @Query('limit') limit: string = '10',
+  //   @Query('offset') offset: string = '0',
+  //   @Query('id') id: string,
+  //   @Param('category') category : string
+  // ) : Promise<Reply[]> {
+  //   const boardId = Number(id);
+  //   const parsedLimit = Number(limit);
+  //   const parsedOffset = Number(offset)
+  //   try {
+  //     return await this.commentService.findAll(boardId, category, parsedLimit, parsedOffset);
+  //   } catch(err) {
+  //     throw new InternalServerErrorException(err.message);
+  //   }
   // }
 
   @Patch(':id/replyUpdate')

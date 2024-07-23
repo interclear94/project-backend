@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query, InternalServe
 import { DetailPageService } from './detail-page.service';
 import { UpdateDetailPageDto } from './dto/update-detail-page.dto';
 import { Board } from 'src/board/entities/board.entity';
-import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 
 @ApiTags("상세페이지 API")
@@ -15,16 +15,22 @@ export class DetailPageController {
   //   return this.detailPageService.create(createDetailPageDto);
   // }
 
-  @Get(":ix")
-  @ApiOperation({summary : "상세 게시물 조회"})
+  @Get(":id")
+  @ApiOperation({summary : "게시물 및 댓글 조회"})
   @ApiResponse({status: 201, description : "게시물 조회 완료", type : Board})
   async getDetailPage(
     @Param("category") category: string,
-    @Query("id") id: string
-  ): Promise<Board> {
+    @Query("id") id: string,
+    @Query('limit') limit: string = '10',
+    @Query('offset') offset: string = '0',
+    @Res() res: Response,
+  ): Promise<Response> {
     const parsedId = Number(id);
+    const parsedLimit = Number(limit);
+    const parsedOffset = Number(offset)
     try {
-      return this.detailPageService.getContent(parsedId, category);
+      const content = await this.detailPageService.getContentAndReply(parsedId, category, parsedLimit, parsedOffset);
+      return res.status(200).json({message: "게시물 조회 성공", content})
     } catch (err) {
       throw new InternalServerErrorException(err.message);
     }
