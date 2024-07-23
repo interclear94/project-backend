@@ -77,6 +77,6 @@ export class User extends Model<User> {
     })
     umessage?:string
 
-    @HasMany(()=> Board)
-    boards!: Board[];
+    // @HasMany(()=> Board)
+    // boards!: Board[];
 }
