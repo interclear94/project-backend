@@ -46,7 +46,10 @@ export class LikesService {
   }
 
   // 좋아요 유무 판단
-  async WhetherLike(boardId: number, category: string, uid: string) : Promise<boolean> {
+  async WhetherLike(boardId: number, category: string, uid?: string) : Promise<boolean> {
+    if(!uid)
+      return false;
+    
     const existingLike = await this.LikeEntity.findOne({
       where: {uid, boardId, category}
     });

@@ -5,6 +5,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { CommentService } from 'src/comment/comment.service';
 import { Reply } from 'src/comment/entities/comment.entity';
 import { Sequelize } from 'sequelize-typescript';
+import { LikesService } from 'src/likes/likes.service';
 
 @Injectable()
 export class DetailPageService {
@@ -14,6 +15,7 @@ export class DetailPageService {
     @InjectModel(Reply)
     private readonly ReplyEntity: typeof Reply,
     private readonly commentService: CommentService,
+    private readonly likeService: LikesService,
     private readonly sequelize : Sequelize
   ) {}
 
@@ -25,18 +27,20 @@ export class DetailPageService {
   //   return `This action returns all detailPage`;
   // }
 
-  async getContentAndReply(boardId: number, category:string, limit? : number, offset?:number) : Promise<{content: Board, reply: Reply[]}> {
+  // 게시물하고 댓글 가져오는 함수
+  async getContentAndReply(boardId: number, category:string, limit? : number, offset?:number, uid?: string) : Promise<{content: Board, reply: Reply[], whetherLike: boolean}> {
     const safeLimit : number  = Number.isNaN(limit) || limit < 1 ? 10 : limit;
     const safeOffset : number = Number.isNaN(offset) || offset < 0 ? 0 : offset;
     
-    const result : {content : Board, reply : Reply[]} = await this.sequelize.transaction(async (transaction) => {
+    const result : {content : Board, reply : Reply[], whetherLike : boolean} = await this.sequelize.transaction(async (transaction) => {
       const content : Board | null = await this.BoardEntity.findOne({ where : {id : boardId, categories : category}, transaction});
       if(content) {
         content.boardView += 1;
         await content.save({transaction})
       }
       const reply : Reply[]  = await this.commentService.findAll(boardId, category, safeLimit, safeOffset);
-      return {content, reply}
+      const whetherLike : boolean = await this.likeService.WhetherLike(boardId, category, uid);
+      return {content, reply, whetherLike};
     })
 
     return result;
@@ -44,6 +48,7 @@ export class DetailPageService {
 
   }
 
+  // 게시물 업데이트 함수
   async update(id: number, updateDetailPageDto: Partial<UpdateDetailPageDto>) : Promise<Board> {
     const content = await this.BoardEntity.findByPk(id);
     if(!content) {
@@ -62,6 +67,7 @@ export class DetailPageService {
     return content.update(updateData)
   }
 
+  // 게시물 삭제 함수
   async softRemove(id: number): Promise<void>{
     const affectedRows = await this.BoardEntity.destroy({
       where: {id}
