@@ -10,11 +10,11 @@ import { UsersModule } from './users/users.module';
 @Module({
   imports: [BoardModule, SequelizeModule.forRoot({
     dialect: "mysql",
-    host: "localhost",
-    port: 3306,
-    username: "admin", // 나중에 수정
-    password: "admin1234", // 나중에 수정
-    database: "test",
+    host: process.env.USERHOST,
+    port: parseInt(process.env.USERPORT),
+    username: process.env.USERNAME, // 나중에 수정
+    password: process.env.USERPW, // 나중에 수정
+    database: process.env.USERDB,
     sync:{force: false},
     autoLoadModels : true,
     synchronize : true
