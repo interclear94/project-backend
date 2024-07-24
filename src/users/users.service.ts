@@ -1,11 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { InjectModel } from '@nestjs/sequelize';
+import { User } from './entities/users.entity';
 
 @Injectable()
 export class UsersService {
-  async create(createUserDto: CreateUserDto): Promise<string> {
-    return 'This action adds a new user';
+  constructor(
+    @InjectModel(User)
+    private userModel: typeof User,
+  ){}
+
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    const {uid, upw, unickname, uemail,uphone} = createUserDto
+    return this.userModel.create({uid, upw, unickname, uemail,uphone});
   }
 
   findAll() {
