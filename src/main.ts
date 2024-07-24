@@ -11,10 +11,11 @@ async function bootstrap() {
 
   // cors 설정
   app.enableCors({
-    origin: "http://localhost:3000", // 나중에 수정
-    methods: 'GET, HEAD, PATCH, POST, DELETE, OPTIONS',
-    allowedHeaders: 'Content-Type, Authorization'
+    origin: "http://127.0.0.1:5501", // 나중에 수정
+    methods: ['GET, HEAD, PATCH, POST, DELETE, OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
   })  
+
 
   await app.listen(3000);
 }

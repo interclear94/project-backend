@@ -28,10 +28,28 @@ export class BoardController {
   }
 
   // 카테고리 게시물 조회 컨트롤러
-  @Get(':category')
+
+  @Get()
   @ApiOperation({summary: "게시판 조회"})
   @ApiResponse({status: 200, description: "게시물 조회 성공", type: [Board]})
   async findAll(  
+    @Query('limit') limit: string = '10',
+    @Query('offset') offset: string = '0',
+  ): Promise<Board[]> {
+    let parsedLimit : number = Number(limit);
+    let parsedOffset : number = Number(offset);
+    try {
+      return this.boardService.findAll(parsedLimit, parsedOffset);
+    } catch (err) {
+      throw new InternalServerErrorException (err.message);
+    }
+  }
+
+  
+  @Get(':category')
+  @ApiOperation({summary: "게시판 조회"})
+  @ApiResponse({status: 200, description: "게시물 조회 성공", type: [Board]})
+  async findCategory(  
     @Query('limit') limit: string = '10',
     @Query('offset') offset: string = '0',
     @Param('category') category: string

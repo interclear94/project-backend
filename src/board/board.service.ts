@@ -32,7 +32,6 @@ export class BoardService {
   async findAll(limit : number, offset : number, category?: string): Promise<Board[]> {
     const safeLimit : number  = Number.isNaN(limit) || limit < 1 ? 10 : limit;
     const safeOffset : number = Number.isNaN(offset) || offset < 0 ? 0 : offset;
-    category = category.trim();
     const whereCondition : any = category ? {categories:category} : {}; 
 
     return await this.BoardEntity.findAll({
