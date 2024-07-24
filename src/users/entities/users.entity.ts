@@ -1,7 +1,6 @@
 // 유저 테이블 생성
 
 import { AutoIncrement, Column, DataType, HasMany, Model, PrimaryKey, Table } from "sequelize-typescript";
-import { Board } from "src/board/entities/board.entity";
 
 @Table({
     tableName: "user",
@@ -50,16 +49,17 @@ export class User extends Model<User> {
 
     // 전화번호
     @Column({
-        type: DataType.STRING,
+        type: DataType.NUMBER,
         allowNull: false,
         unique: true
     })
-    uphone!: string;
+    uphone!: number;
 
     // 관리자 여부
     @Column({
         type: DataType.BOOLEAN,
-        allowNull: false
+        allowNull: true,
+        defaultValue: false
     })
     isAdmin!: boolean;
 
