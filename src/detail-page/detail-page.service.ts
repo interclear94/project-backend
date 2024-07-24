@@ -37,7 +37,6 @@ export class DetailPageService {
       }
       const reply : Reply[]  = await this.commentService.findAll(boardId, category, safeLimit, safeOffset);
       return {content, reply}
-
     })
 
     return result;

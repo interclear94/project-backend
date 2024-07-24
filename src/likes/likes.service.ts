@@ -15,7 +15,7 @@ export class LikesService {
     private readonly BoardEntity: typeof Board
   ) {}
 
-  // 좋아요 숫자
+  // 좋아요 갯수 카운트
   async countLike(boardId: number, category: string) : Promise<number> {
     return this.LikeEntity.count({where : {boardId, category}});
   }
@@ -45,4 +45,16 @@ export class LikesService {
     }
   }
 
+  // 좋아요 유무 판단
+  async WhetherLike(boardId: number, category: string, uid: string) : Promise<boolean> {
+    const existingLike = await this.LikeEntity.findOne({
+      where: {uid, boardId, category}
+    });
+
+    if(existingLike) {
+      return true;
+    } else{
+      return false;
+    }
+  }
 }
