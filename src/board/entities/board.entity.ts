@@ -73,7 +73,8 @@ export class Board extends Model<Board> {
     // 좋아요
     @Column({
         type : DataType.INTEGER,
-        allowNull : false
+        allowNull : false,
+        defaultValue: 0,
     })
     boardLike!: number;
 

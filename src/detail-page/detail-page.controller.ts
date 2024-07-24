@@ -55,6 +55,8 @@ export class DetailPageController {
     }
   }
 
+  @Patch("id/ILikeThisPost")
+
 
   @Delete(':id/postDelete')
   @ApiOperation({summary : "게시물 삭제"})

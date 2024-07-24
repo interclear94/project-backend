@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateDetailPageDto } from './dto/create-detail-page.dto';
 import { UpdateDetailPageDto } from './dto/update-detail-page.dto';
 import { Board } from 'src/board/entities/board.entity';
 import { InjectModel } from '@nestjs/sequelize';
 import { CommentService } from 'src/comment/comment.service';
 import { Reply } from 'src/comment/entities/comment.entity';
+import { Sequelize } from 'sequelize-typescript';
 
 @Injectable()
 export class DetailPageService {
@@ -14,6 +14,7 @@ export class DetailPageService {
     @InjectModel(Reply)
     private readonly ReplyEntity: typeof Reply,
     private readonly commentService: CommentService,
+    private readonly sequelize : Sequelize
   ) {}
 
   // create(createDetailPageDto: CreateDetailPageDto) {
@@ -27,10 +28,21 @@ export class DetailPageService {
   async getContentAndReply(boardId: number, category:string, limit? : number, offset?:number) : Promise<{content: Board, reply: Reply[]}> {
     const safeLimit : number  = Number.isNaN(limit) || limit < 1 ? 10 : limit;
     const safeOffset : number = Number.isNaN(offset) || offset < 0 ? 0 : offset;
-    const content : Board = await this.BoardEntity.findOne({ where : {id : boardId, categories : category}})
-    const reply : Reply[]  = await this.commentService.findAll(boardId, category, safeLimit, safeOffset);
+    
+    const result : {content : Board, reply : Reply[]} = await this.sequelize.transaction(async (transaction) => {
+      const content : Board | null = await this.BoardEntity.findOne({ where : {id : boardId, categories : category}, transaction});
+      if(content) {
+        content.boardView += 1;
+        await content.save({transaction})
+      }
+      const reply : Reply[]  = await this.commentService.findAll(boardId, category, safeLimit, safeOffset);
+      return {content, reply}
 
-    return {content, reply}
+    })
+
+    return result;
+
+
   }
 
   async update(id: number, updateDetailPageDto: Partial<UpdateDetailPageDto>) : Promise<Board> {
