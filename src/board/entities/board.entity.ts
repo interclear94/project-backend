@@ -2,6 +2,7 @@
 
 import { AutoIncrement, BelongsTo, Column, DataType, ForeignKey, HasMany, Model, PrimaryKey, Table } from "sequelize-typescript"
 import { Reply } from "src/comment/entities/comment.entity";
+import { Like } from "src/likes/entities/like.entity";
 
 @Table({
     tableName: "board",
@@ -97,4 +98,8 @@ export class Board extends Model<Board> {
     // 본문과 댓글 연결
     @HasMany(()=> Reply)
     comments!:Reply[];
+
+    // 본문과 좋아요 연결
+    @HasMany(()=>Like)
+    likes!:Like[];
 }

@@ -15,6 +15,7 @@ export class DetailPageController {
   //   return this.detailPageService.create(createDetailPageDto);
   // }
 
+  // 게시물 조회 컨트롤러
   @Get(":id")
   @ApiOperation({summary : "게시물 및 댓글 조회"})
   @ApiResponse({status: 201, description : "게시물 조회 완료", type : Board})
@@ -37,6 +38,7 @@ export class DetailPageController {
   }
 
 
+  // 게시물 수정 컨트롤러
   @Patch(':id/postUpdate')
   @ApiOperation({summary: "게시물 수정"})
   @ApiResponse({status:201, description: "게시물 수정 완료"})
@@ -55,9 +57,8 @@ export class DetailPageController {
     }
   }
 
-  @Patch("id/ILikeThisPost")
 
-
+  // 게시물 삭제 컨트롤러
   @Delete(':id/postDelete')
   @ApiOperation({summary : "게시물 삭제"})
   async remove(

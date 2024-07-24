@@ -10,6 +10,7 @@ import { Response } from 'express';
 export class BoardController {
   constructor(private readonly boardService: BoardService) {}
 
+  // 게시물 생성 컨트롤러
   @Post(':category/postCreate')
   @ApiOperation({summary : "게시물 생성"})
   @ApiResponse({status: 201, description: "게시물 생성 성공", type: Board})
@@ -26,6 +27,7 @@ export class BoardController {
     }
   }
 
+  // 카테고리 게시물 조회 컨트롤러
   @Get(':category')
   @ApiOperation({summary: "게시판 조회"})
   @ApiResponse({status: 200, description: "게시물 조회 성공", type: [Board]})

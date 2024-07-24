@@ -5,6 +5,7 @@ import { BoardModule } from './board/board.module';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { DetailPageModule } from './detail-page/detail-page.module';
 import { CommentModule } from './comment/comment.module';
+import { LikesModule } from './likes/likes.module';
 
 @Module({
   imports: [BoardModule, SequelizeModule.forRoot({
@@ -17,7 +18,7 @@ import { CommentModule } from './comment/comment.module';
     sync:{force: false},
     autoLoadModels : true,
     synchronize : true
-  }), DetailPageModule, CommentModule],
+  }), DetailPageModule, CommentModule, LikesModule],
   controllers: [AppController],
   providers: [AppService],
 })
