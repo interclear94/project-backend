@@ -1,6 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto, LoginUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User } from './entities/users.entity';
@@ -18,6 +18,18 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
+  @Post('login')
+  @ApiOperation({ summary: 'Register a new user' })
+  @ApiResponse({ status: 201, description: 'The user has been successfully login.' })
+  @ApiResponse({ status: 400, description: 'Bad request.' })
+  async login(@Body() loginUserDto: LoginUserDto) {
+    const {uid, upw} = loginUserDto;
+    const user = await this.usersService.loginUser(uid,upw);
+    if(!user) {
+      throw new UnauthorizedException('로그인 실패');
+    }
+    return {message: '로그인 성공', user}
+  }
   @Get()
   findAll() {
     return this.usersService.findAll();
