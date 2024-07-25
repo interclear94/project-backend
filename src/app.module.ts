@@ -6,9 +6,13 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { DetailPageModule } from './detail-page/detail-page.module';
 import { CommentModule } from './comment/comment.module';
 import { LikesModule } from './likes/likes.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
-  imports: [BoardModule, SequelizeModule.forRoot({
+  imports: [
+    BoardModule,
+    SequelizeModule.forRoot({
     dialect: "mysql",
     host: "localhost",
     port: 3306,
@@ -18,7 +22,14 @@ import { LikesModule } from './likes/likes.module';
     sync:{force: false},
     autoLoadModels : true,
     synchronize : true
-  }), DetailPageModule, CommentModule, LikesModule],
+  }),
+  DetailPageModule,
+  CommentModule,
+  LikesModule,
+  ServeStaticModule.forRoot({
+    rootPath: join(__dirname, "..", "static")
+  })
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -17,6 +17,7 @@ export class BoardService {
   async create(createBoardDto: CreateBoardDto, category:string): Promise<Board> {
     try {
       const { boardTitle, boardContent, uid, unickname, boardFile } = createBoardDto;
+      console.log(boardTitle, boardContent, uid, unickname, boardFile)
       return await this.BoardEntity.create({
         boardTitle, boardContent, uid, unickname, boardFile, categories: category
       })
