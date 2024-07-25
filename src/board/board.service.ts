@@ -44,16 +44,4 @@ export class BoardService {
     })
   }
 
-  // findOne(id: number) {
-  //   return `This action returns a #${id} board`;
-  // }
-
-
-  // update(id: number, updateBoardDto: UpdateBoardDto) {
-  //   return `This action updates a #${id} board`;
-  // }
-
-  // remove(id: number) {
-  //   return `This action removes a #${id} board`;
-  // }
 }
