@@ -37,9 +37,13 @@ export class CommentService {
   async create(createCommentDto: CreateCommentDto, category:string, boardId:number) : Promise<Reply> {
     try {
       const { uid, unickname, replyContent, replyFile, parentId } = createCommentDto;
-      return await this.ReplyEntity.create({
+      const result =  await this.ReplyEntity.create({
         uid, unickname, boardId, replyContent, replyFile, category, parentId
       })
+      await this.countReply(boardId);
+
+      return result;
+
     } catch (err) {
       if(err.name === "SequelizeForeignKeyConstraintError"){
         throw new Error("ForeignKeyConstraintError");
@@ -71,7 +75,7 @@ export class CommentService {
   }
 
   // 댓글 삭제
-  async softRemove(id: number): Promise<void> {
+  async softRemove(id: number, boardId : number): Promise<void> {
     const numberOfAffectedRows = await this.ReplyEntity.destroy({
       where : {id}
     })
@@ -79,5 +83,7 @@ export class CommentService {
     if (numberOfAffectedRows === 0) {
       throw new NotFoundException("댓글을 찾을 수 없습니다.");
     }
+
+    await this.countReply(boardId);
   }
 }

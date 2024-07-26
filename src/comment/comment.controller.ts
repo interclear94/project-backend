@@ -36,6 +36,9 @@ export class CommentController {
       if(parentId)
         createCommentDto.parentId = Number(parentId);
 
+      createCommentDto.uid = userToken;
+      createCommentDto.unickname = nicknameToken;
+
       await this.commentService.create(createCommentDto, category, boardId);
       return res.status(201).json({message : "댓글 생성 성공", category, id})
     } catch (err) {
@@ -86,13 +89,18 @@ export class CommentController {
     }
   }
 
-  @Delete(':id/replyDelete')
+  @Delete(':boardId/:id/replyDelete')
   @ApiOperation({summary : "댓글 삭제"})
   @ApiResponse({status:201, description: "댓글 삭제 완료"})
-  async remove(@Query('id') id: string, @Param('category') category : string, @Res() res: Response) : Promise<Response> {
+  async remove(
+    @Param('boardId') boardId : string,
+    @Param('id') id: string,
+    @Param('category') category : string,
+    @Res() res: Response) : Promise<Response> {
     try {
       const parsedId = Number(id);
-      await this.commentService.softRemove(parsedId);
+      const parseBoardId = Number(boardId);
+      await this.commentService.softRemove(parsedId, parseBoardId);
       return res.status(200).json({message: "게시물 삭제 완료", parsedId, category})
     } catch(err) {
       throw new InternalServerErrorException(err.message);
