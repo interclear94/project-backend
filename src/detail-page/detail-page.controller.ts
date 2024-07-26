@@ -10,18 +10,13 @@ import { Response } from 'express';
 export class DetailPageController {
   constructor(private readonly detailPageService: DetailPageService) {}
 
-  // @Post()
-  // create(@Body() createDetailPageDto: CreateDetailPageDto) {
-  //   return this.detailPageService.create(createDetailPageDto);
-  // }
-
   // 게시물 조회 컨트롤러
   @Get(":id")
   @ApiOperation({summary : "게시물 및 댓글 조회"})
   @ApiResponse({status: 201, description : "게시물 조회 완료", type : Board})
   async getDetailPage(
     @Param("category") category: string,
-    @Query("id") id: string,
+    @Param("id") id: string,
     @Query('limit') limit: string = '10',
     @Query('offset') offset: string = '0',
     @Res() res: Response,
@@ -31,7 +26,7 @@ export class DetailPageController {
     const parsedOffset = Number(offset)
     try {
       const content = await this.detailPageService.getContentAndReply(parsedId, category, parsedLimit, parsedOffset);
-      return res.status(200).json({message: "게시물 조회 성공", content})
+      return res.status(200).json({message: "게시물 조회 성공", wholeContents : content})
     } catch (err) {
       throw new InternalServerErrorException(err.message);
     }
@@ -45,7 +40,7 @@ export class DetailPageController {
   @ApiBody({type: UpdateDetailPageDto})
   async update(
     @Param('category') category : string,
-    @Query('id') id: string,
+    @Param('id') id: string,
     @Body() updateDetailPageDto: Partial<UpdateDetailPageDto>,
     @Res() res : Response
   ): Promise<Response> {
@@ -62,7 +57,7 @@ export class DetailPageController {
   @Delete(':id/postDelete')
   @ApiOperation({summary : "게시물 삭제"})
   async remove(
-    @Query('id') id: string,
+    @Param('id') id: string,
     @Param('category') category: string,
     @Res()res : Response
   ) : Promise<Response> {

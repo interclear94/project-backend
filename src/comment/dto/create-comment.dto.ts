@@ -1,7 +1,7 @@
 export class CreateCommentDto {
-    uid: string;
-    unickname: string;
     replyContent: string;
+    uid?: string;
+    unickname?: string;
     parentId?: number;
     replyFile?: string;
 }

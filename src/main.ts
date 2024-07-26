@@ -13,7 +13,7 @@ async function bootstrap() {
   app.enableCors({
     origin: "http://127.0.0.1:5501", // 나중에 수정
     methods: ['GET', 'HEAD', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'userToken', 'unickname']
+    allowedHeaders: ['Content-Type', 'userToken', 'unickname', 'parentId']
   })  
 
 

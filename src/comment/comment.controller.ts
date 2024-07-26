@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Patch, Param, Delete, Query, Res, InternalServerErrorException } from '@nestjs/common';
+import { Controller, Post, Body, Patch, Param, Delete, Query, Res, InternalServerErrorException, Headers } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
@@ -19,11 +19,23 @@ export class CommentController {
   async create(
     @Body() createCommentDto: CreateCommentDto,
     @Param('category') category : string,
-    @Query('id') id : string,
+    @Param('id') id : string,
+    @Headers('userToken') userToken: string, // 유저 id 토큰 받아오기
+    @Headers('unickname') nicknameToken: string, // 유저 닉네임 토큰 받아오기
+    @Headers('parentId') parentId : string,
     @Res() res: Response,
     ): Promise<Response> {
     try {
       const boardId = Number(id);
+
+      // 토큰에서 닉네임이랑 아이디 가져옴
+      createCommentDto.uid = userToken;
+      createCommentDto.unickname = nicknameToken;
+
+      // 대댓글이면 패런트 아이디 추가
+      if(parentId)
+        createCommentDto.parentId = Number(parentId);
+
       await this.commentService.create(createCommentDto, category, boardId);
       return res.status(201).json({message : "댓글 생성 성공", category, id})
     } catch (err) {
@@ -60,7 +72,7 @@ export class CommentController {
   @ApiResponse({status :201, description: "댓글 수정 성공", type: [Reply]})
   @ApiBody({type : UpdateCommentDto})
   async update(
-    @Query('id') id: string,
+    @Param('id') id: string,
     @Body() updateCommentDto: UpdateCommentDto,
     @Res() res: Response,
     @Param('categort') category : string,

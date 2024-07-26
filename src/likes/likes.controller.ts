@@ -17,7 +17,7 @@ export class LikesController {
   async likeToggle(
     @Body() createLikeDto : CreateLikeDto,
     @Param('category') category :string,
-    @Query('id')id : string,
+    @Param('id')id : string,
     @Res() res: Response,
   ) : Promise<Response> {
     const boardId = Number(id);

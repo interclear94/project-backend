@@ -62,8 +62,7 @@ export class DetailPageService {
       boardTitle : boardTitle !== undefined ? boardTitle : content.boardTitle,
       boardContent : boardContent !== undefined ? boardContent : content.boardContent
     }
-    
-
+  
     return content.update(updateData)
   }
 
