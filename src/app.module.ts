@@ -5,9 +5,15 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { User } from './users/entities/users.entity';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  imports: [SequelizeModule.forRoot({
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    SequelizeModule.forRoot({
     dialect: "mysql",
     // host: process.env.USERHOST,
     // port: parseInt(process.env.USERPORT),
@@ -21,8 +27,12 @@ import { AuthModule } from './auth/auth.module';
     database: 'uk2',
     sync:{force: false},
     autoLoadModels : true,
-    synchronize : true
-  }), UsersModule, AuthModule],
+    synchronize : true,
+  }), UsersModule, AuthModule,
+JwtModule.register({
+  secret:process.env.Jwt_Key,
+  signOptions: {expiresIn: '5m'}
+})],
   controllers: [AppController],
   providers: [AppService],
 })

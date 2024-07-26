@@ -43,6 +43,24 @@ export class UsersService {
     return {uid: user.uid, unickname: user.unickname}
   }
 
+  async validateUser(loginUserDto: LoginUserDto): Promise<User> {
+    const { uid, upw } = loginUserDto;
+    const user = await this.userModel.findOne({ where: { uid } });
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    const isPasswordMatching = await bcrypt.compare(upw, user.upw);
+    if (!isPasswordMatching) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    return user;
+  }
+
+
+  
+
   findAll() {
     return `This action returns all users`;
   }
