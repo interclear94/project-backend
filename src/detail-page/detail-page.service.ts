@@ -58,7 +58,7 @@ export class DetailPageService {
     const {boardFile, boardContent, boardTitle} = updateDetailPageDto;
 
     const updateData = {
-      boardFile : boardFile !== undefined ? boardFile : content.boardContent,
+      boardFile : boardFile !== undefined ? boardFile : content.boardFile,
       boardTitle : boardTitle !== undefined ? boardTitle : content.boardTitle,
       boardContent : boardContent !== undefined ? boardContent : content.boardContent
     }
