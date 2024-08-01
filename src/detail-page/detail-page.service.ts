@@ -6,6 +6,7 @@ import { CommentService } from 'src/comment/comment.service';
 import { Reply } from 'src/comment/entities/comment.entity';
 import { Sequelize } from 'sequelize-typescript';
 import { LikesService } from 'src/likes/likes.service';
+import * as fs from 'fs/promises';
 
 @Injectable()
 export class DetailPageService {
@@ -68,6 +69,13 @@ export class DetailPageService {
 
   // 게시물 삭제 함수
   async softRemove(id: number): Promise<void>{
+
+    // 게시물 삭제될때 파일도 삭제하는 부분. 소프트 삭제라 구현해야할지는 의문
+    // const content = await this.BoardEntity.findByPk(id);
+    // if(content.boardFile) {
+    //   await fs.unlink(content.boardFile);
+    // }
+
     const affectedRows = await this.BoardEntity.destroy({
       where: {id}
     })
