@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, InternalServerErrorException, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, InternalServerErrorException, Res, Headers, UploadedFile } from '@nestjs/common';
 import { DetailPageService } from './detail-page.service';
 import { UpdateDetailPageDto } from './dto/update-detail-page.dto';
 import { Board } from 'src/board/entities/board.entity';
@@ -42,9 +42,17 @@ export class DetailPageController {
     @Param('category') category : string,
     @Param('id') id: string,
     @Body() updateDetailPageDto: Partial<UpdateDetailPageDto>,
+    @UploadedFile() file : Express.Multer.File,
     @Res() res : Response
   ): Promise<Response> {
     try{
+
+      // 파일이 있으면 경로 추가
+      if(file) {
+        const filePath = '/img/' + file.filename;
+        updateDetailPageDto.boardFile = filePath;
+      }
+
       await this.detailPageService.update(+id, updateDetailPageDto);
       return res.status(200).json({message: "게시물 수정 완료", id, category});
     } catch(err) {
