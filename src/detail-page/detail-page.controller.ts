@@ -1,9 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, InternalServerErrorException, Res, Headers, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, InternalServerErrorException, Res, Headers, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { DetailPageService } from './detail-page.service';
 import { UpdateDetailPageDto } from './dto/update-detail-page.dto';
 import { Board } from 'src/board/entities/board.entity';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { multerOptions } from 'src/lib/multer.config';
 
 @ApiTags("상세페이지 API")
 @Controller('board/:category')
@@ -35,13 +37,14 @@ export class DetailPageController {
 
   // 게시물 수정 컨트롤러
   @Patch(':id/postUpdate')
+  @UseInterceptors(FileInterceptor('boardFile', multerOptions))
   @ApiOperation({summary: "게시물 수정"})
   @ApiResponse({status:201, description: "게시물 수정 완료"})
   @ApiBody({type: UpdateDetailPageDto})
   async update(
     @Param('category') category : string,
     @Param('id') id: string,
-    @Body() updateDetailPageDto: Partial<UpdateDetailPageDto>,
+    @Body() updateDetailPageDto: UpdateDetailPageDto,
     @UploadedFile() file : Express.Multer.File,
     @Res() res : Response
   ): Promise<Response> {

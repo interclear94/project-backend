@@ -1,7 +1,7 @@
 
 export class UpdateDetailPageDto {
-    boardTitle?: string;
-    boardContent? : string;
-    boardFile?: string;
     uid?:string;
+    boardTitle: string;
+    boardContent : string;
+    boardFile?: string;
 }

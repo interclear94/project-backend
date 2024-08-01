@@ -22,7 +22,7 @@ export class CommentController {
     @Param('id') id : string,
     @Headers('userToken') userToken: string, // 유저 id 토큰 받아오기
     @Headers('unickname') nicknameToken: string, // 유저 닉네임 토큰 받아오기
-    @Headers('parentId') parentId : string,
+    // @Headers('parentId') parentId : string,
     @Res() res: Response,
     ): Promise<Response> {
     try {
@@ -33,8 +33,8 @@ export class CommentController {
       createCommentDto.unickname = nicknameToken;
 
       // 대댓글이면 패런트 아이디 추가
-      if(parentId)
-        createCommentDto.parentId = Number(parentId);
+      // if(parentId)
+      //   createCommentDto.parentId = Number(parentId);
 
       createCommentDto.uid = userToken;
       createCommentDto.unickname = nicknameToken;
