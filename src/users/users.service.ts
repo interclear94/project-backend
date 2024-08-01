@@ -5,6 +5,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { User } from './entities/users.entity';
 import * as bcrypt from 'bcrypt'
 
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -15,33 +16,56 @@ export class UsersService {
   private readonly saltRounds = 10;
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    const {uid, upw, unickname, uemail,uphone} = createUserDto
-    const hashPw = await this.hashPw(upw)
+    console.log(createUserDto.uid);
     
+    const {uid, upw, unickname, uemail, uphone} = createUserDto
     console.log('생성 완료')
-    return this.userModel.create({uid, upw : hashPw, unickname, uemail,uphone});
-  }
-
-  private async hashPw(password: string): Promise<string> {
-    const salt = await bcrypt.genSalt(this.saltRounds);
-    return bcrypt.hash(password, salt);
-  }
-
-  async loginUser(uid: string, upw:string): Promise<{uid : string, unickname: string}> {
-    const user = await this.userModel.findOne({where: {uid}});
-    const pwMatch = await bcrypt.compare(upw, user.upw);
-    if(!user){
-      console.error('아이디가 없습니다.')
-      throw new UnauthorizedException('아이디 없음')  
-    }
+    const hashPw = await bcrypt.hash(upw.toString(), 10)
     
-    if(!pwMatch){
-      console.error('비밀번호 틀림')
-      throw new UnauthorizedException('비밀번호 틀림')
-    }
-    console.log('로그인성공')
-    return {uid: user.uid, unickname: user.unickname}
+    return this.userModel.create({uid, upw : hashPw, unickname, uemail, uphone});
   }
+
+  // async createUser(uid: string, unickname:string, uemail:string, uphone:number): Promise<{uid: string,upw:string, unickname:string, uemail:string, uphone:number}>{
+  //   const userid = await this.userModel.findOne({where: {uid}});
+  //   const usernick = await this.userModel.findOne({where: {unickname}});
+  //   const useremail = await this.userModel.findOne({where: {uemail}});
+  //   const userphone = await this.userModel.findOne({where: {uphone}});
+
+  //   if(userid){
+  //     throw new UnauthorizedException('아이디 중복')
+  //   }
+
+  //   if(usernick){
+  //     throw new UnauthorizedException('닉네임 중복')
+  //   }
+
+  //   if(useremail){
+  //     throw new UnauthorizedException('이메일 중복')
+  //   }
+
+  //   if(userphone){
+  //     throw new UnauthorizedException('휴대폰 중복')
+  //   }
+
+  //   console.log('회원가입 성공')
+  //   return {uid: userid.uid, upw: userid.upw, unickname:userid.unickname, uemail:userid.uemail, uphone:userid.uphone}
+  // }
+
+  // async loginUser(uid: string, upw:string): Promise<{uid : string, unickname: string}> {
+  //   const user = await this.userModel.findOne({where: {uid}});
+  //   const pwMatch = await bcrypt.compare(upw, user.upw);
+  //   if(!user){
+  //     console.error('아이디가 없습니다.')
+  //     throw new UnauthorizedException('아이디 없음')  
+  //   }
+    
+  //   if(!pwMatch){
+  //     console.error('비밀번호 틀림')
+  //     throw new UnauthorizedException('비밀번호 틀림')
+  //   }
+  //   console.log('로그인성공')
+  //   return {uid: user.uid, unickname: user.unickname}
+  // }
 
   async validateUser(loginUserDto: LoginUserDto): Promise<User> {
     const { uid, upw } = loginUserDto;
@@ -57,9 +81,6 @@ export class UsersService {
 
     return user;
   }
-
-
-  
 
   findAll() {
     return `This action returns all users`;

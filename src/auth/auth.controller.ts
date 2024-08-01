@@ -11,14 +11,13 @@ export class AuthController {
   async login(@Body() loginUserDto: LoginUserDto,@Res()res:Response) {
     const user= await this.authService.validateUser(loginUserDto.uid, loginUserDto.upw);
     if(!user){
-      throw new UnauthorizedException('아이디 존재X')
+      throw new UnauthorizedException("아이디 존재X");
     }
     const token = this.authService.login(user);
     const date= new Date();
     date.setMinutes(date.getMinutes()+60);
     res.cookie("token",token,{httpOnly:true,expires:date})
-    return res.redirect("");
-    
+    return res.redirect(`http://www.naver.com`);  
     // return this.authService.login(user);
   }
 }

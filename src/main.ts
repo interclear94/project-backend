@@ -14,6 +14,13 @@ async function bootstrap() {
     .addTag('cats')
     .build();
 
+    app.enableCors({
+      origin: ['http://127.0.0.1:5500','https://hwongje.shop'],
+      methods: ['GET,HEAD,PUT,PATCH,POST,DELETE'], 
+      credentials: true,  
+      
+    });
+
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document); 
   await app.listen(3000);
