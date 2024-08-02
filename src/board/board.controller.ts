@@ -91,7 +91,7 @@ export class BoardController {
   }
 
   // 검색 컨트롤러
-  @Get("board/search")
+  @Get("logic/search")
   @ApiOperation({summary : "게시물 검색"})
   @ApiResponse({status: 200, description: "게시물 검색 성공", type: [Board]})
   async searchController(

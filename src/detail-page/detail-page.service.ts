@@ -8,6 +8,7 @@ import { Sequelize } from 'sequelize-typescript';
 import { LikesService } from 'src/likes/likes.service';
 import * as fs from 'fs/promises';
 import { IReply } from 'src/comment/interface/comment.interface';
+import * as path from 'path';
 
 @Injectable()
 export class DetailPageService {
@@ -57,6 +58,12 @@ export class DetailPageService {
     if(!content) {
       throw new Error("Post does not exist");
     }
+
+    // 파일 업데이트 시 기존 파일 삭제
+    if(content.boardFile) {
+      const staticPath = path.join(__dirname, "..", "..", "static", content.boardFile)
+      await fs.unlink(staticPath);
+    }
     
     const {boardFile, boardContent, boardTitle} = updateDetailPageDto;
 
@@ -65,6 +72,8 @@ export class DetailPageService {
       boardTitle : boardTitle !== undefined ? boardTitle : content.boardTitle,
       boardContent : boardContent !== undefined ? boardContent : content.boardContent
     }
+
+    
   
     return content.update(updateData)
   }
@@ -72,11 +81,12 @@ export class DetailPageService {
   // 게시물 삭제 함수
   async softRemove(id: number): Promise<void>{
 
-    // 게시물 삭제될때 파일도 삭제하는 부분. 소프트 삭제라 구현해야할지는 의문
-    // const content = await this.BoardEntity.findByPk(id);
-    // if(content.boardFile) {
-    //   await fs.unlink(content.boardFile);
-    // }
+    // 게시물 삭제될때 파일도 삭제하는 부분.
+    const content = await this.BoardEntity.findByPk(id);
+    if(content.boardFile) {
+      const staticPath = path.join(__dirname, "..", "..", "static", content.boardFile)
+      await fs.unlink(staticPath);
+    }
 
     const affectedRows = await this.BoardEntity.destroy({
       where: {id}

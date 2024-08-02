@@ -22,6 +22,7 @@ import { join } from 'path';
     sync:{force: false},
     autoLoadModels : true,
     synchronize : true,
+    logging : false,
   }),
   DetailPageModule,
   CommentModule,
