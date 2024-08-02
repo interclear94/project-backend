@@ -29,7 +29,8 @@ export class CommentService {
         model: Reply,
         as: 'replies',
         required: false,
-        order: [['createdAt', 'ASC'], ['id', 'ASC']]
+        order: [['createdAt', 'ASC'], ['id', 'ASC']],
+        paranoid : false,
       }],
       paranoid : false,
     })
