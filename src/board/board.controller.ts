@@ -6,6 +6,7 @@ import { Board } from './entities/board.entity';
 import { Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'src/lib/multer.config';
+// import { IBoard } from './interface/boaard.interface';
 
 @ApiTags("게시판 API")
 @Controller('board')
@@ -51,7 +52,6 @@ export class BoardController {
   }
 
   // 카테고리 게시물 조회 컨트롤러
-
   @Get()
   @ApiOperation({summary: "전체 게시판 조회"})
   @ApiResponse({status: 200, description: "게시물 조회 성공", type: [Board]})
@@ -87,6 +87,27 @@ export class BoardController {
       return res.status(200).json({message: "특정 게시물 조회 성공", postList});
     } catch (err) {
       throw new InternalServerErrorException (err.message);
+    }
+  }
+
+  // 검색 컨트롤러
+  @Get("board/search")
+  @ApiOperation({summary : "게시물 검색"})
+  @ApiResponse({status: 200, description: "게시물 검색 성공", type: [Board]})
+  async searchController(
+    @Query('word') word: string,
+    @Query('limit') limit: string = '10',
+    @Query('offset') offset: string = '0',
+    @Res() res : Response,
+  ) : Promise<Response> {
+    let parsedLimit : number = Number(limit);
+    let parsedOffset : number = Number(offset);
+    try {
+      const postList = await this.boardService.searchBoard(parsedLimit, parsedOffset, word);
+      return res.status(200).json({message: "게시물 검색 성공", postList} );
+    } catch(err) {
+      console.error('Search error:', err.message);
+      throw new InternalServerErrorException (err.message)
     }
   }
 

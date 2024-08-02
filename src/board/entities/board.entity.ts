@@ -39,7 +39,7 @@ export class Board extends Model<Board> {
         allowNull: false,
         defaultValue: 0,
     })
-    boardView!: string;
+    boardView!: number;
 
     // 유저 아이디
     // @ForeignKey(()=> User)

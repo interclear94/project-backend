@@ -21,7 +21,7 @@ import { join } from 'path';
     database: "projectdatabase",
     sync:{force: false},
     autoLoadModels : true,
-    synchronize : true
+    synchronize : true,
   }),
   DetailPageModule,
   CommentModule,
