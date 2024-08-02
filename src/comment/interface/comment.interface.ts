@@ -10,5 +10,6 @@ export interface IReply {
     createdAt:string,
     updatedAt:string,
     deletedAt:string,
-    replies?:Array<IReply>
+    replies?:Array<IReply>,
+    isDeleted: boolean,
 }

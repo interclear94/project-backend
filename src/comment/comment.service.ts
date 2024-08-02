@@ -41,12 +41,13 @@ export class CommentService {
         unickname: reply.unickname,
         boardId: reply.boardId,
         category: reply.category,
-        replyContent: reply.deletedAt ? '삭제되었습니다' : reply.replyContent,
+        replyContent: reply.deletedAt ? '삭제된 댓글입니다.' : reply.replyContent,
         parentId: reply.parentId,
         replyFile: reply.replyFile,
         createdAt: reply.createdAt,
         updatedAt: reply.updatedAt,
         deletedAt: reply.deletedAt,
+        isDeleted: !!reply.deletedAt,
         replies: reply.replies ? reply.replies.map(transformReply) : [],
       };
     };
