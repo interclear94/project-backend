@@ -8,17 +8,21 @@ import { CommentModule } from './comment/comment.module';
 import { LikesModule } from './likes/likes.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal : true,
+    }),
     BoardModule,
     SequelizeModule.forRoot({
     dialect: "mysql",
-    host: "localhost",
-    port: 3306,
-    username: "root", // 나중에 수정
-    password: "189189", // 나중에 수정
-    database: "projectdatabase",
+    host: process.env.MYSQL_USERHOST,
+    port: parseInt(process.env.MYSQL_USWERPORT),
+    username: process.env.MYSQL_USERNAME, // 나중에 수정
+    password: process.env.MYSQL_USERPW , // 나중에 수정
+    database: process.env.MYSQL_USWERDB,
     sync:{force: false},
     autoLoadModels : true,
     synchronize : true,
