@@ -12,27 +12,24 @@ import { HttpModule } from '@nestjs/axios';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true,
+      isGlobal: true, // 전역설정
     }),
     HttpModule,
     SequelizeModule.forRoot({
     dialect: "mysql",
-    // host: process.env.USERHOST,
-    // port: parseInt(process.env.USERPORT),
-    // username: process.env.USERNAME, // 나중에 수정
-    // password: process.env.USERPW, // 나중에 수정
-    // database: process.env.USERDB,
-    host: 'localhost',
-    port: 3306,
-    username: 'root' , // 나중에 수정
-    password: 'xodnr1027@', // 나중에 수정
-    database: 'uk2',
+    host: process.env.MYSQL_USERHOST,
+    port: parseInt(process.env.MYSQL_USERPORT),
+    username: process.env.MYSQL_USERNAME, // 나중에 수정
+    password: process.env.MYSQL_USERPW, // 나중에 수정
+    database: process.env.MYSQL_USERDB,
+
     sync:{force: false},
     autoLoadModels : true,
     synchronize : true,
   }), UsersModule, AuthModule,
 JwtModule.register({
-  secret:process.env.Jwt_Key,
+  // secret:process.env.Jwt_Key,
+  // secret:'kita',
   signOptions: {expiresIn: '5m'}
 })],
   controllers: [AppController],

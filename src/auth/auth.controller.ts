@@ -9,15 +9,16 @@ export class AuthController {
 
   @Post('login')
   async login(@Body() loginUserDto: LoginUserDto,@Res()res:Response) {
-    const user= await this.authService.validateUser(loginUserDto.uid, loginUserDto.upw);
+    const user = await this.authService.validateUser(loginUserDto.uid, loginUserDto.upw);
     if(!user){
       throw new UnauthorizedException("아이디 존재X");
     }
     const token = this.authService.login(user);
     const date= new Date();
     date.setMinutes(date.getMinutes()+60);
-    res.cookie("token",token,{httpOnly:true,expires:date})
-    return res.redirect(`http://www.naver.com`);  
+    res.cookie(`token`,token,{ httpOnly:true,expires:date })
+    console.log(res.statusCode);
+    return res.status(200).send();
     // return this.authService.login(user);
   }
 }
