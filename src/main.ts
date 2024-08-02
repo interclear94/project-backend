@@ -19,7 +19,6 @@ async function bootstrap() {
       origin: ['http://127.0.0.1:5500','https://hwongje.shop'],
       methods: ['GET,HEAD,PUT,PATCH,POST,DELETE'], 
       credentials: true,  
-      
     });
 
   const document = SwaggerModule.createDocument(app, config);

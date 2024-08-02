@@ -46,7 +46,7 @@ export class UsersController {
   // }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get('update/:id')
+  @Get('profile')
   getProfile(@Param('id')id:CreateUserDto ,@Request() req) {
     return req.id;
   }

@@ -14,7 +14,7 @@ import { ConfigModule } from '@nestjs/config';
   imports: [
     ConfigModule.forRoot(),
     UsersModule,
-    PassportModule,
+    PassportModule.register({ defaultStrategy: 'jwt'}),
     JwtModule.register({
       secret: process.env.Jwt_Key,
       signOptions: {expiresIn: '5m'},
@@ -22,5 +22,6 @@ import { ConfigModule } from '@nestjs/config';
   ],
   providers: [AuthService ,UsersService],
   controllers: [AuthController],
+  // exports: [PassportModule, JwtModule],
 })
 export class AuthModule {}

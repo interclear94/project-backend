@@ -9,7 +9,7 @@
 //         super ({
 //             jwtFromRequest:ExtractJwt.fromAuthHeaderAsBearerToken(),
 //             ignoreExpiration: false,
-//             secretOrKey: 'kita',
+//             secretOrKey: process.env.Jwt_Key,
 //         })
 //     }
 //     async validate(payload: any){

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { SequelizeModule } from '@nestjs/sequelize';
@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { HttpModule } from '@nestjs/axios';
+import  cookie from'cookie-parser';
 
 @Module({
   imports: [
@@ -19,20 +20,19 @@ import { HttpModule } from '@nestjs/axios';
     dialect: "mysql",
     host: process.env.MYSQL_USERHOST,
     port: parseInt(process.env.MYSQL_USERPORT),
-    username: process.env.MYSQL_USERNAME, // 나중에 수정
-    password: process.env.MYSQL_USERPW, // 나중에 수정
+    username: process.env.MYSQL_USERNAME,
+    password: process.env.MYSQL_USERPW,
     database: process.env.MYSQL_USERDB,
-
     sync:{force: false},
     autoLoadModels : true,
     synchronize : true,
   }), UsersModule, AuthModule,
-JwtModule.register({
-  // secret:process.env.Jwt_Key,
-  // secret:'kita',
-  signOptions: {expiresIn: '5m'}
-})],
+],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule implements NestModule{ 
+  configure(consumer: MiddlewareConsumer) {
+      consumer.apply(cookie()).forRoutes("*");
+  }
+}

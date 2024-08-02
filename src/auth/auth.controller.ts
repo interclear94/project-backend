@@ -8,17 +8,25 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
-  async login(@Body() loginUserDto: LoginUserDto,@Res()res:Response) {
+  async login(@Body() loginUserDto: LoginUserDto, @Res()res:Response) {
+    try {
     const user = await this.authService.validateUser(loginUserDto.uid, loginUserDto.upw);
-    if(!user){
-      throw new UnauthorizedException("아이디 존재X");
-    }
+
     const token = this.authService.login(user);
     const date= new Date();
-    date.setMinutes(date.getMinutes()+60);
-    res.cookie(`token`,token,{ httpOnly:true,expires:date })
+
+    console.log(token);
+
+    date.setDate(date.getDate()+1);
+    const date2  = new Date(date)
+
+    res.cookie("token",token,{ httpOnly:true,expires: date })
     console.log(res.statusCode);
+    console.log(res);
     return res.status(200).send();
-    // return this.authService.login(user);
+
+  } catch(err) {
+
+  }
   }
 }
