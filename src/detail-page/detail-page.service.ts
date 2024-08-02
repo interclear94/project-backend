@@ -7,6 +7,7 @@ import { Reply } from 'src/comment/entities/comment.entity';
 import { Sequelize } from 'sequelize-typescript';
 import { LikesService } from 'src/likes/likes.service';
 import * as fs from 'fs/promises';
+import { IReply } from 'src/comment/interface/comment.interface';
 
 @Injectable()
 export class DetailPageService {
@@ -29,17 +30,18 @@ export class DetailPageService {
   // }
 
   // 게시물하고 댓글 가져오는 함수
-  async getContentAndReply(boardId: number, category:string, limit? : number, offset?:number, uid?: string) : Promise<{content: Board, reply: Reply[], whetherLike: boolean}> {
+  async getContentAndReply(boardId: number, category:string, limit? : number, offset?:number, uid?: string) : Promise<{content: Board, reply: IReply[], whetherLike: boolean}> {
     const safeLimit : number  = Number.isNaN(limit) || limit < 1 ? 10 : limit;
     const safeOffset : number = Number.isNaN(offset) || offset < 0 ? 0 : offset;
     
-    const result : {content : Board, reply : Reply[], whetherLike : boolean} = await this.sequelize.transaction(async (transaction) => {
+    const result : {content : Board, reply :IReply[], whetherLike : boolean} = await this.sequelize.transaction(async (transaction) => {
       const content : Board | null = await this.BoardEntity.findOne({ where : {id : boardId, categories : category}, transaction});
       if(content) {
         content.boardView += 1;
         await content.save({transaction})
       }
-      const reply : Reply[]  = await this.commentService.findAll(boardId, category, safeLimit, safeOffset);
+      const reply : IReply[]  = await this.commentService.findAll(boardId, category, safeLimit, safeOffset);
+
       const whetherLike : boolean = await this.likeService.WhetherLike(boardId, category, uid);
       return {content, reply, whetherLike};
     })

@@ -4,6 +4,7 @@ import { UpdateCommentDto } from './dto/update-comment.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { Reply } from './entities/comment.entity';
 import { Board } from 'src/board/entities/board.entity';
+import { IReply } from './interface/comment.interface';
 
 @Injectable()
 export class CommentService {
@@ -15,11 +16,11 @@ export class CommentService {
   ) {}
 
   // 댓글 조회
-  async findAll(boardId: number, category: string, limit: number, offset: number): Promise<Reply[]> {
+  async findAll(boardId: number, category: string, limit: number, offset: number): Promise<IReply[]> {
     const safeLimit : number  = Number.isNaN(limit) || limit < 1 ? 10 : limit;
     const safeOffset : number = Number.isNaN(offset) || offset < 0 ? 0 : offset;
 
-    return await this.ReplyEntity.findAll({
+    const originalComment = await this.ReplyEntity.findAll({
       where: {boardId, category, parentId: null},
       limit : safeLimit,
       offset : safeOffset,
@@ -29,8 +30,29 @@ export class CommentService {
         as: 'replies',
         required: false,
         order: [['createdAt', 'ASC'], ['id', 'ASC']]
-      }]
+      }],
+      paranoid : false,
     })
+
+    const transformReply = (reply): IReply => {
+      return {
+        id: reply.id,
+        uid: reply.uid,
+        unickname: reply.unickname,
+        boardId: reply.boardId,
+        category: reply.category,
+        replyContent: reply.deletedAt ? '삭제되었습니다' : reply.replyContent,
+        parentId: reply.parentId,
+        replyFile: reply.replyFile,
+        createdAt: reply.createdAt,
+        updatedAt: reply.updatedAt,
+        deletedAt: reply.deletedAt,
+        replies: reply.replies ? reply.replies.map(transformReply) : [],
+      };
+    };
+
+    return originalComment.map(transformReply);
+
   }
 
   // 댓글 생성
