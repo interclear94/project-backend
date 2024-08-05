@@ -39,7 +39,6 @@ export class DetailPageService {
 
     return result;
 
-
   }
 
   // 게시물 업데이트 함수
@@ -58,9 +57,6 @@ export class DetailPageService {
       boardTitle : boardTitle !== undefined ? boardTitle : content.boardTitle,
       boardContent : boardContent !== undefined ? boardContent : content.boardContent
     }
-    // console.log("====================================================")
-    // console.log(boardFile);
-    // console.log("====================================================")
 
     // 파일 업데이트 시 새 파일이 있으면 기존 파일 삭제
     try {
