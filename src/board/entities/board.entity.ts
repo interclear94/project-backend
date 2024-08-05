@@ -1,7 +1,8 @@
 // 게시판 테이블 생성
 
-import { AutoIncrement, BelongsTo, Column, DataType, ForeignKey, Model, PrimaryKey, Table } from "sequelize-typescript"
-import { User } from "src/users/entities/users.entity"
+import { AutoIncrement, BelongsTo, Column, DataType, ForeignKey, HasMany, Model, PrimaryKey, Table } from "sequelize-typescript"
+import { Reply } from "src/comment/entities/comment.entity";
+import { Like } from "src/likes/entities/like.entity";
 
 @Table({
     tableName: "board",
@@ -38,10 +39,10 @@ export class Board extends Model<Board> {
         allowNull: false,
         defaultValue: 0,
     })
-    boardView!: string;
+    boardView!: number;
 
     // 유저 아이디
-    @ForeignKey(()=> User)
+    // @ForeignKey(()=> User)
     @Column({
         type: DataType.STRING,
         allowNull: false,
@@ -49,7 +50,7 @@ export class Board extends Model<Board> {
     uid!: string;
 
     // 유저 닉네임
-    @ForeignKey(()=> User)
+    // @ForeignKey(()=> User)
     @Column({
         type: DataType.STRING,
         allowNull: false,
@@ -61,20 +62,44 @@ export class Board extends Model<Board> {
         type: DataType.STRING,
         allowNull: false,
     })
-    categiries: string;
+    categories!: string;
 
     // 파일
     @Column({
         type: DataType.STRING,
         allowNull: true,
     })
-    boardFile: string;
+    boardFile?: string;
+
+    // 좋아요
+    @Column({
+        type : DataType.INTEGER,
+        allowNull : false,
+        defaultValue: 0,
+    })
+    boardLike!: number;
+
+    // 댓글 수 저장
+    @Column({
+        type: DataType.INTEGER,
+        allowNull: false,
+        defaultValue : 0
+    })
+    numberOfComment : number;
 
     // User table의 uid와 Borad table의 uid를 연결
-    @BelongsTo(() => User, { foreignKey: 'uid' })
-    user!: User;
+    // @BelongsTo(() => User, { foreignKey: 'uid' })
+    // user!: User;
 
 
-    @BelongsTo(() => User, { foreignKey: 'unickname' })
-    userNickname!: User;
+    // @BelongsTo(() => User, { foreignKey: 'unickname' })
+    // userNickname!: User;
+
+    // 본문과 댓글 연결
+    @HasMany(()=> Reply)
+    comments!:Reply[];
+
+    // 본문과 좋아요 연결
+    @HasMany(()=>Like)
+    likes!:Like[];
 }

@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { CreateBoardDto } from './dto/create-board.dto';
-import { UpdateBoardDto } from './dto/update-board.dto';
-import { IBoard } from './board.model';
 import { Board } from './entities/board.entity';
 import { InjectModel } from '@nestjs/sequelize';
+import { Op } from 'sequelize';
+import { IBoard } from './interface/boaard.interface';
 
 @Injectable()
 export class BoardService {
@@ -14,27 +14,88 @@ export class BoardService {
     private readonly BoardEntity : typeof Board
   ) {}
 
+  // 특수문자 escape 함수
+  private exceptSpecialChar(word : string) : string {
+    return word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  // 텍스트 강조 함수
+  private highlightText(text : string, searchTerm : string) : string {
+    if (!searchTerm.trim()) return text;
+
+    const escapedTerm = this.exceptSpecialChar(searchTerm);
+    const filterdTerm = new  RegExp(`(${searchTerm})`, 'gi');
+    return text.replace(filterdTerm, '<mark>$1</mark>')
+  }
+
   // DTO로 받아와서 메서드로 sql에 저장
-  async create(createBoardDto: CreateBoardDto): Promise<Board> {
-    const {boardTitle, boardContent, uid, unickname, boardFile, category} = createBoardDto;
-    return this.BoardEntity.create({
-      boardTitle, boardContent, uid, unickname, boardFile, categiries:category
+  async create(createBoardDto: CreateBoardDto, category:string): Promise<Board> {
+    try {
+      const { boardTitle, boardContent, uid, unickname, boardFile } = createBoardDto;
+      console.log(boardTitle, boardContent, uid, unickname, boardFile)
+      return await this.BoardEntity.create({
+        boardTitle, boardContent, uid, unickname, boardFile, categories: category
+      })
+    } catch (err) {
+      if(err.message === "SequelizeForeignKeyConstraintError") {
+        throw new Error("ForeignKeyConstraintError");
+      }
+      throw err;
+    }
+  }
+
+  // 모든 게시물을 가져온다.
+  async findAll(limit : number, offset : number, category?: string): Promise<Board[]> {
+    const safeLimit : number  = Number.isNaN(limit) || limit < 1 ? 10 : limit;
+    const safeOffset : number = Number.isNaN(offset) || offset < 0 ? 0 : offset;
+    const whereCondition : any = category ? {categories:category} : {}; 
+
+    return await this.BoardEntity.findAll({
+      where : whereCondition,
+      limit : safeLimit,
+      offset : safeOffset,
+      order: [
+        ['createdAt', 'DESC']
+      ]
     })
   }
 
-  findAll() {
-    return `This action returns all board`;
-  }
+  // 게시물 검색 로직
+  async searchBoard(limit : number, offset : number, word : string) : Promise<IBoard[]>  {
+    const safeLimit : number  = Number.isNaN(limit) || limit < 1 ? 10 : limit;
+    const safeOffset : number = Number.isNaN(offset) || offset < 0 ? 0 : offset;
 
-  findOne(id: number) {
-    return `This action returns a #${id} board`;
-  }
+    // console.log('Search term:', word);
+    // console.log('Limit:', safeLimit);
+    // console.log('Offset:', safeOffset);
 
-  update(id: number, updateBoardDto: UpdateBoardDto) {
-    return `This action updates a #${id} board`;
-  }
+    try {
+      const foundBoard = await this.BoardEntity.findAll({
+        where : {
+          [Op.or] : [
+            {boardTitle : {[Op.like] : `%${word}%`}},
+            {boardContent : {[Op.like] : `%${word}%`} },
+          ],
+        },
+        limit : safeLimit,
+        offset : safeOffset,
+        order : [['createdAt', 'DESC']],
+      });
 
-  remove(id: number) {
-    return `This action removes a #${id} board`;
+      // console.log('Found boards:', foundBoard);
+      
+      return foundBoard.map(item => {
+        const plainItem = item.toJSON() as IBoard; // Sequelize 모델 인스턴스를 plain object로 변환하고 IBoard 타입으로 캐스팅
+        return {
+          ...plainItem,
+          boardTitle: this.highlightText(plainItem.boardTitle, word),
+          boardContent: this.highlightText(plainItem.boardContent, word),
+        };
+      }); 
+    } catch(err) {
+      console.error('Error occurred:', err.message);
+      throw err;
+    }
   }
+  
 }
