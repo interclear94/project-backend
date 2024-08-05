@@ -80,7 +80,9 @@ export class UsersService {
     }
 
     return user;
-  }
+
+    
+  } 
 
   update(id: number, updateUserDto: UpdateUserDto) {
     return `This action updates a #${id} user`;

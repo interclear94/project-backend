@@ -15,18 +15,22 @@ export class AuthController {
     const token = this.authService.login(user);
     const date= new Date();
 
-    console.log(token);
+    date.setDate(date.getDate()+10);
+    const date2  = new Date(date);
 
-    date.setDate(date.getDate()+1);
-    const date2  = new Date(date)
+    res.cookie('token', token, {
+      httpOnly: true,
+      expires: date2,
+      sameSite: 'none', // 크로스 사이트 정책 sameSite = lax , sameSite: 'none'
+      secure : true // https sameSite: 'none'가 있어야 한다.
+    });
 
-    res.cookie("token",token,{ httpOnly:true,expires: date })
     console.log(res.statusCode);
     console.log(res);
-    return res.status(200).send();
+    res.status(200).send();
 
   } catch(err) {
-
+    res.status(401).json({ message: '아이디 또는 비밀번호가 일치하지 않습니다.' });
   }
   }
 }
