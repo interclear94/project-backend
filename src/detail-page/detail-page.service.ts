@@ -22,14 +22,6 @@ export class DetailPageService {
     private readonly sequelize : Sequelize
   ) {}
 
-  // create(createDetailPageDto: CreateDetailPageDto) {
-  //   return 'This action adds a new detailPage';
-  // }
-
-  // findAll() {
-  //   return `This action returns all detailPage`;
-  // }
-
   // 게시물하고 댓글 가져오는 함수
   async getContentAndReply(boardId: number, category:string, limit? : number, offset?:number) : Promise<{content: Board, reply: IReply[]}> {
     const safeLimit : number  = Number.isNaN(limit) || limit < 1 ? 10 : limit;
@@ -57,21 +49,28 @@ export class DetailPageService {
       throw new Error("Post does not exist");
     }
 
-    // 파일 업데이트 시 기존 파일 삭제
-    if(content.boardFile) {
-      const staticPath = path.join(__dirname, "..", "..", "static", content.boardFile)
-      await fs.unlink(staticPath);
-    }
+
     
     const {boardFile, boardContent, boardTitle} = updateDetailPageDto;
-
+    
     const updateData = {
       boardFile : boardFile !== undefined ? boardFile : content.boardFile,
       boardTitle : boardTitle !== undefined ? boardTitle : content.boardTitle,
       boardContent : boardContent !== undefined ? boardContent : content.boardContent
     }
+    // console.log("====================================================")
+    // console.log(boardFile);
+    // console.log("====================================================")
 
-    
+    // 파일 업데이트 시 새 파일이 있으면 기존 파일 삭제
+    try {
+      if((content.boardFile !== boardFile) && (boardFile)) {
+        const staticPath = path.join(__dirname, "..", "..", "static", content.boardFile)
+        await fs.unlink(staticPath);
+      }
+    } catch (err) {
+      throw new Error("업데이트 - 기존 파일 삭제 에러 발생")
+    }
   
     return content.update(updateData)
   }
