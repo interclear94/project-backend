@@ -50,26 +50,6 @@ export class CommentController {
     }
   }
 
-  // 댓글 불러오기
-  // @Get(':id')
-  // @ApiOperation({summary : "댓글 조회"})
-  // @ApiResponse({status: 200, description: "댓글 조회 성공", type: [Reply]})
-  // async findAll(
-  //   @Query('limit') limit: string = '10',
-  //   @Query('offset') offset: string = '0',
-  //   @Query('id') id: string,
-  //   @Param('category') category : string
-  // ) : Promise<Reply[]> {
-  //   const boardId = Number(id);
-  //   const parsedLimit = Number(limit);
-  //   const parsedOffset = Number(offset)
-  //   try {
-  //     return await this.commentService.findAll(boardId, category, parsedLimit, parsedOffset);
-  //   } catch(err) {
-  //     throw new InternalServerErrorException(err.message);
-  //   }
-  // }
-
   @Patch(':id/replyUpdate')
   @ApiOperation({summary : "댓글 수정"})
   @ApiResponse({status :201, description: "댓글 수정 성공", type: [Reply]})

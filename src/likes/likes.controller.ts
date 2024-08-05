@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Param, Res, InternalServerErrorException } from '@nestjs/common';
+import { Controller, Post, Body, Param, Res, InternalServerErrorException, Headers } from '@nestjs/common';
 import { LikesService } from './likes.service';
 import { CreateLikeDto } from './dto/create-like.dto';
 import { Response } from 'express';
@@ -34,14 +34,13 @@ export class LikesController {
   @Post(':id/whetherLike')
   @ApiOperation({summary: "좋아요 했는지 확인"})
   @ApiResponse({status: 200, description: "좋아요 조회 성공"})
-  @ApiBody({type: CreateLikeDto})
   async findUserLikeInfo(
-    @Body() createLikeDto : CreateLikeDto,
+    @Headers(`userToken`) userToken : string,
     @Param('id') boardId: string,
     @Param('category') category : string,
     @Res() res : Response,
   ) {
-    const isLike : boolean = await this.likesService.WhetherLike(+boardId, category, createLikeDto.uid);
+    const isLike : boolean = await this.likesService.WhetherLike(+boardId, category, userToken);
     return res.status(200).json({message : "조회 성공", isLike});
   }
 }
