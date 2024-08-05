@@ -31,20 +31,18 @@ export class DetailPageService {
   // }
 
   // 게시물하고 댓글 가져오는 함수
-  async getContentAndReply(boardId: number, category:string, limit? : number, offset?:number, uid?: string) : Promise<{content: Board, reply: IReply[], whetherLike: boolean}> {
+  async getContentAndReply(boardId: number, category:string, limit? : number, offset?:number) : Promise<{content: Board, reply: IReply[]}> {
     const safeLimit : number  = Number.isNaN(limit) || limit < 1 ? 10 : limit;
     const safeOffset : number = Number.isNaN(offset) || offset < 0 ? 0 : offset;
     
-    const result : {content : Board, reply :IReply[], whetherLike : boolean} = await this.sequelize.transaction(async (transaction) => {
+    const result : {content : Board, reply :IReply[]} = await this.sequelize.transaction(async (transaction) => {
       const content : Board | null = await this.BoardEntity.findOne({ where : {id : boardId, categories : category}, transaction});
       if(content) {
         content.boardView += 1;
         await content.save({transaction})
       }
       const reply : IReply[]  = await this.commentService.findAll(boardId, category, safeLimit, safeOffset);
-
-      const whetherLike : boolean = await this.likeService.WhetherLike(boardId, category, uid);
-      return {content, reply, whetherLike};
+      return {content, reply};
     })
 
     return result;

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Query, Res, InternalServerErrorException } from '@nestjs/common';
+import { Controller, Post, Body, Param, Res, InternalServerErrorException } from '@nestjs/common';
 import { LikesService } from './likes.service';
 import { CreateLikeDto } from './dto/create-like.dto';
 import { Response } from 'express';
@@ -12,7 +12,7 @@ export class LikesController {
   // 좋아요!!
   @Post(":id/LikeUpdate")
   @ApiOperation({summary: "좋아요"})
-  @ApiResponse({status: 200, description: "좋아요 업데이트 성공"})
+  @ApiResponse({status: 201, description: "좋아요 업데이트 성공"})
   @ApiBody({type: CreateLikeDto})
   async likeToggle(
     @Body() createLikeDto : CreateLikeDto,
@@ -24,29 +24,24 @@ export class LikesController {
     const uid = createLikeDto.uid;
     try {
       const resultMessage : string = await this.likesService.updateLikeStatus(boardId, category, uid);
-      return res.status(200).json({mesaage: resultMessage});
+      return res.status(201).json({mesaage: resultMessage});
     } catch (err) {
       throw  new InternalServerErrorException(err.mesaage);
     }
   }
 
-  // @Get()
-  // findAll() {
-  //   return this.likesService.findAll();
-  // }
-
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.likesService.findOne(+id);
-  // }
-
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateLikeDto: UpdateLikeDto) {
-  //   return this.likesService.update(+id, updateLikeDto);
-  // }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.likesService.remove(+id);
-  // }
+  // 좋아요 했는지
+  @Post(':id/whetherLike')
+  @ApiOperation({summary: "좋아요 했는지 확인"})
+  @ApiResponse({status: 200, description: "좋아요 조회 성공"})
+  @ApiBody({type: CreateLikeDto})
+  async findUserLikeInfo(
+    @Body() createLikeDto : CreateLikeDto,
+    @Param('id') boardId: string,
+    @Param('category') category : string,
+    @Res() res : Response,
+  ) {
+    const isLike : boolean = await this.likesService.WhetherLike(+boardId, category, createLikeDto.uid);
+    return res.status(200).json({message : "조회 성공", isLike});
+  }
 }

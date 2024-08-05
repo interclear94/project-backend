@@ -1,6 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { CreateLikeDto } from './dto/create-like.dto';
-import { UpdateLikeDto } from './dto/update-like.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { Like } from './entities/like.entity';
 import { Board } from 'src/board/entities/board.entity';
@@ -51,7 +49,7 @@ export class LikesService {
       return false;
     
     const existingLike = await this.LikeEntity.findOne({
-      where: {uid, boardId, category}
+      where: {boardId, uid, category}
     });
 
     if(existingLike) {
