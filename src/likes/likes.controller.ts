@@ -1,8 +1,7 @@
-import { Controller, Post, Body, Param, Res, InternalServerErrorException, Headers } from '@nestjs/common';
+import { Controller, Post, Param, Res, InternalServerErrorException, Headers, Get } from '@nestjs/common';
 import { LikesService } from './likes.service';
-import { CreateLikeDto } from './dto/create-like.dto';
 import { Response } from 'express';
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags("좋아요")
 @Controller('board/:category')
@@ -13,15 +12,14 @@ export class LikesController {
   @Post(":id/LikeUpdate")
   @ApiOperation({summary: "좋아요"})
   @ApiResponse({status: 201, description: "좋아요 업데이트 성공"})
-  @ApiBody({type: CreateLikeDto})
   async likeToggle(
-    @Body() createLikeDto : CreateLikeDto,
+    @Headers(`userToken`) userToken : string,
     @Param('category') category :string,
     @Param('id')id : string,
     @Res() res: Response,
   ) : Promise<Response> {
     const boardId = Number(id);
-    const uid = createLikeDto.uid;
+    const uid = userToken;
     try {
       const resultMessage : string = await this.likesService.updateLikeStatus(boardId, category, uid);
       return res.status(201).json({mesaage: resultMessage});
@@ -31,7 +29,7 @@ export class LikesController {
   }
 
   // 좋아요 했는지
-  @Post(':id/whetherLike')
+  @Get(':id/whetherLike')
   @ApiOperation({summary: "좋아요 했는지 확인"})
   @ApiResponse({status: 200, description: "좋아요 조회 성공"})
   async findUserLikeInfo(
