@@ -80,7 +80,6 @@ export class BoardService {
         limit : safeLimit,
         offset : safeOffset,
         order : [['createdAt', 'DESC']],
-        logging: console.log,
       });
 
       // console.log('Found boards:', foundBoard);
