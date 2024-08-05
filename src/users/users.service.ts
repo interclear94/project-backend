@@ -4,6 +4,9 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from './entities/users.entity';
 import * as bcrypt from 'bcrypt'
+import { Repository } from 'sequelize-typescript';
+import { JwtService } from '@nestjs/jwt';
+import { UUID } from 'sequelize';
 
 
 @Injectable()
@@ -11,6 +14,7 @@ export class UsersService {
   constructor(
     @InjectModel(User)
     private userModel: typeof User,
+    private jwtService: JwtService,
   ){}
 
   private readonly saltRounds = 10;
@@ -80,9 +84,22 @@ export class UsersService {
     }
 
     return user;
-
-    
   } 
+
+  async getUserById(userdata: any ): Promise<User> {
+    const uid = userdata.username
+    console.log('??', uid)
+    return await this.userModel.findOne({ where: {uid} });
+  }
+  
+
+  async verifyToken(token: string) {
+    try {
+      return this.jwtService.verify(token); // JWT 검증
+    } catch (error) {
+        throw new UnauthorizedException('유효하지 않은 토큰');
+    }
+}
 
   update(id: number, updateUserDto: UpdateUserDto) {
     return `This action updates a #${id} user`;

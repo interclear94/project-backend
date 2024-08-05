@@ -22,11 +22,11 @@ export class AuthController {
       httpOnly: true,
       expires: date2,
       sameSite: 'none', // 크로스 사이트 정책 sameSite = lax , sameSite: 'none'
-      secure : true // https sameSite: 'none'가 있어야 한다.
+      secure : true, // https sameSite: 'none'가 있어야 한다.
+      path: '/',
+      domain: 'localhost'
     });
 
-    console.log(res.statusCode);
-    console.log(res);
     res.status(200).send();
 
   } catch(err) {

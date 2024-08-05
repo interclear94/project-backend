@@ -1,27 +1,27 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { UsersModule } from 'src/users/users.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-// import { JwTStrategy } from './strategy/jwt.strategy';
+import { JwtStrategy } from './strategy/jwt.strategy';
 import { UsersService } from 'src/users/users.service';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { User } from 'src/users/entities/users.entity';
 import { ConfigModule } from '@nestjs/config';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    UsersModule,
+    forwardRef(() => UsersModule),
     PassportModule.register({ defaultStrategy: 'jwt'}),
     JwtModule.register({
       secret: process.env.Jwt_Key,
-      signOptions: {expiresIn: '5m'},
+      signOptions: {expiresIn: '24h'},
     }),SequelizeModule.forFeature([User])
   ],
-  providers: [AuthService ,UsersService],
+  providers: [AuthService ,UsersService,JwtStrategy],
   controllers: [AuthController],
-  // exports: [PassportModule, JwtModule],
+  exports: [PassportModule, JwtModule,AuthModule],
 })
 export class AuthModule {}
