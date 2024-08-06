@@ -1,28 +1,25 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { FaqModule } from './faq/faq.module';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { User } from './users/entities/users.entity';
-import { UsersModule } from './users/users.module';
 
 @Module({
-  imports: [SequelizeModule.forRoot({
-    dialect: "mysql",
-    host: process.env.USERHOST,
-    port: parseInt(process.env.USERPORT),
-    username: process.env.USERNAME, // 나중에 수정
-    password: process.env.USERPW, // 나중에 수정
-    database: process.env.USERDB,
-    // host: 'localhost',
-    // port: 3306,
-    // username: 'admin' , // 나중에 수정
-    // password: 'admin1234', // 나중에 수정
-    // database: 'user',
-    sync:{force: false},
-    autoLoadModels : true,
-    synchronize : true
-  }), UsersModule],
+  imports: [
+    SequelizeModule.forRoot({
+      dialect: 'mysql',
+      host: 'localhost',
+      port: 3306,
+      username: 'root',
+      password: 'Grisdo1@',
+      database: 'project',
+      autoLoadModels: true,
+      synchronize: true,
+      sync: {force: false}
+    })
+    ,FaqModule
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}
