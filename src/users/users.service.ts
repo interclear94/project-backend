@@ -1,9 +1,7 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import * as bcrypt from 'bcrypt'
-import { Repository } from 'sequelize-typescript';
 import { JwtService } from '@nestjs/jwt';
-import { UUID } from 'sequelize';
 import { User } from './entities/users.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto, LoginUserDto } from './dto/create-user.dto';
@@ -29,48 +27,6 @@ export class UsersService {
     return this.userModel.create({uid, upw : hashPw, unickname, uemail, uphone});
   }
 
-  // async createUser(uid: string, unickname:string, uemail:string, uphone:number): Promise<{uid: string,upw:string, unickname:string, uemail:string, uphone:number}>{
-  //   const userid = await this.userModel.findOne({where: {uid}});
-  //   const usernick = await this.userModel.findOne({where: {unickname}});
-  //   const useremail = await this.userModel.findOne({where: {uemail}});
-  //   const userphone = await this.userModel.findOne({where: {uphone}});
-
-  //   if(userid){
-  //     throw new UnauthorizedException('아이디 중복')
-  //   }
-
-  //   if(usernick){
-  //     throw new UnauthorizedException('닉네임 중복')
-  //   }
-
-  //   if(useremail){
-  //     throw new UnauthorizedException('이메일 중복')
-  //   }
-
-  //   if(userphone){
-  //     throw new UnauthorizedException('휴대폰 중복')
-  //   }
-
-  //   console.log('회원가입 성공')
-  //   return {uid: userid.uid, upw: userid.upw, unickname:userid.unickname, uemail:userid.uemail, uphone:userid.uphone}
-  // }
-
-  // async loginUser(uid: string, upw:string): Promise<{uid : string, unickname: string}> {
-  //   const user = await this.userModel.findOne({where: {uid}});
-  //   const pwMatch = await bcrypt.compare(upw, user.upw);
-  //   if(!user){
-  //     console.error('아이디가 없습니다.')
-  //     throw new UnauthorizedException('아이디 없음')  
-  //   }
-    
-  //   if(!pwMatch){
-  //     console.error('비밀번호 틀림')
-  //     throw new UnauthorizedException('비밀번호 틀림')
-  //   }
-  //   console.log('로그인성공')
-  //   return {uid: user.uid, unickname: user.unickname}
-  // }
-
   async validateUser(loginUserDto: LoginUserDto): Promise<User> {
     const { uid, upw } = loginUserDto;
     const user = await this.userModel.findOne({ where: { uid } });
@@ -88,6 +44,7 @@ export class UsersService {
 
   async getUserById(userdata: any ): Promise<User> {
     const uid = userdata.username
+    
     console.log('??', uid)
     return await this.userModel.findOne({ where: {uid} });
   }
@@ -101,7 +58,18 @@ export class UsersService {
     }
 }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+async update(userId: string, updateUserDto: UpdateUserDto): Promise<User> {
+  const user = await this.userModel.findOne({ where: { uid: userId } });
+  if (!user) {
+    throw new NotFoundException(`아이디를 찾을수 없음.`);
   }
+
+  if (updateUserDto.upw) {
+    console.log('넘어옴')
+    updateUserDto.upw = await bcrypt.hash(updateUserDto.upw.toString(), this.saltRounds);
+  }
+
+  await user.update(updateUserDto);
+  return user;
+}
 }

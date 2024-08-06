@@ -13,7 +13,6 @@ import { UsersModule } from 'src/users/users.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    forwardRef(() => UsersModule),
     PassportModule.register({ defaultStrategy: 'jwt'}),
     JwtModule.register({
       secret: process.env.Jwt_Key,

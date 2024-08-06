@@ -11,7 +11,7 @@ import { User } from './entities/users.entity';
 @Module({
   imports : [SequelizeModule.forFeature([User]),
   HttpModule,
-  forwardRef(() => AuthModule)
+  AuthModule
 ],
   controllers: [UsersController],
   providers: [UsersService,JwtStrategy],

@@ -33,6 +33,8 @@ import { BoardModule } from './board/board.module';
       synchronize: true,
       logging: false,
     }),
+    UsersModule,
+    AuthModule,
     DetailPageModule,
     CommentModule,
     LikesModule,
@@ -41,8 +43,6 @@ import { BoardModule } from './board/board.module';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'static'),
     }),
-    UsersModule,
-    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
