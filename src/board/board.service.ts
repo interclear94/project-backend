@@ -65,9 +65,9 @@ export class BoardService {
     const safeLimit : number  = Number.isNaN(limit) || limit < 1 ? 10 : limit;
     const safeOffset : number = Number.isNaN(offset) || offset < 0 ? 0 : offset;
 
-    // console.log('Search term:', word);
-    // console.log('Limit:', safeLimit);
-    // console.log('Offset:', safeOffset);
+    console.log('Search term:', word);
+    console.log('Limit:', safeLimit);
+    console.log('Offset:', safeOffset);
 
     try {
       const foundBoard = await this.BoardEntity.findAll({
@@ -82,7 +82,7 @@ export class BoardService {
         order : [['createdAt', 'DESC']],
       });
 
-      // console.log('Found boards:', foundBoard);
+      console.log('Found boards:', foundBoard);
       
       return foundBoard.map(item => {
         const plainItem = item.toJSON() as IBoard; // Sequelize 모델 인스턴스를 plain object로 변환하고 IBoard 타입으로 캐스팅

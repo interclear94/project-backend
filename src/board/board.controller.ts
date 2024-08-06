@@ -30,7 +30,7 @@ export class BoardController {
     @Res() res : Response,
     ) : Promise<Response> {
     try {
-      
+
       // 파일 있을 경우 데이터베이스에 추가할 경로 입력
       if(file) {
         const filePath = '/img/' + file.filename;
@@ -91,7 +91,7 @@ export class BoardController {
   }
 
   // 검색 컨트롤러
-  @Get("logic/search//implement")
+  @Get("logic/search/implement")
   @ApiOperation({summary : "게시물 검색"})
   @ApiResponse({status: 200, description: "게시물 검색 성공", type: [Board]})
   async searchController(
@@ -100,6 +100,7 @@ export class BoardController {
     @Query('offset') offset: string = '0',
     @Res() res : Response,
   ) : Promise<Response> {
+    console.log("오는지 확인")
     let parsedLimit : number = Number(limit);
     let parsedOffset : number = Number(offset);
     try {
