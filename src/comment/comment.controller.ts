@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Patch, Param, Delete, Query, Res, InternalServerErrorException, Headers } from '@nestjs/common';
+import { Controller, Post, Body, Patch, Param, Delete, Query, Res, InternalServerErrorException, Headers, ValidationPipe } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
@@ -17,7 +17,7 @@ export class CommentController {
   @ApiResponse({status: 201, description: "댓글 생성 성공"})
   @ApiBody({type: CreateCommentDto})
   async create(
-    @Body() createCommentDto: CreateCommentDto,
+    @Body(new ValidationPipe()) createCommentDto: CreateCommentDto,
     @Param('category') category : string,
     @Param('id') id : string,
     @Headers('userToken') userToken: string, // 유저 id 토큰 받아오기
@@ -56,7 +56,7 @@ export class CommentController {
   @ApiBody({type : UpdateCommentDto})
   async update(
     @Param('id') id: string,
-    @Body() updateCommentDto: UpdateCommentDto,
+    @Body(new ValidationPipe()) updateCommentDto: UpdateCommentDto,
     @Res() res: Response,
     @Param('categort') category : string,
   ) {
