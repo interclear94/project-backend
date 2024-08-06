@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Query, Res, InternalServerErrorException, UseInterceptors, UploadedFile, Headers } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query, Res, InternalServerErrorException, UseInterceptors, UploadedFile, Headers, ValidationPipe } from '@nestjs/common';
 import { BoardService } from './board.service';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { ApiBody, ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -22,7 +22,7 @@ export class BoardController {
   @ApiHeader({name: 'userToken', description:"사용자 인증 토큰", required: true})
   @ApiHeader({name: 'unickname', description:"닉네임 토큰", required: true})
   async create(
-    @Body() createBoardDto: CreateBoardDto,
+    @Body(new ValidationPipe()) createBoardDto: CreateBoardDto,
     @Headers('userToken') userToken: string, // 유저 id 토큰 받아오기
     @Headers('unickname') nicknameToken: string, // 유저 닉네임 토큰 받아오기
     @UploadedFile() file : Express.Multer.File, // 멀터로 파일 받기
