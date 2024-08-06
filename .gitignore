@@ -60,3 +60,7 @@ package-lock.json
 
 # app.module
 app.module.ts
+
+# custom
+.gitignore
+
