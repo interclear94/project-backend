@@ -65,6 +65,7 @@ let BoardController = class BoardController {
         }
     }
     async searchController(word, limit = '10', offset = '0', res) {
+        console.log("오는지 확인");
         let parsedLimit = Number(limit);
         let parsedOffset = Number(offset);
         try {
@@ -120,7 +121,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], BoardController.prototype, "findCategory", null);
 __decorate([
-    (0, common_1.Get)("logic/search//implement"),
+    (0, common_1.Get)("logic/search/implement"),
     (0, swagger_1.ApiOperation)({ summary: "게시물 검색" }),
     (0, swagger_1.ApiResponse)({ status: 200, description: "게시물 검색 성공", type: [board_entity_1.Board] }),
     __param(0, (0, common_1.Query)('word')),
