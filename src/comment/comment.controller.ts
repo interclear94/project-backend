@@ -32,13 +32,6 @@ export class CommentController {
       createCommentDto.uid = userToken;
       createCommentDto.unickname = nicknameToken;
 
-      // 대댓글이면 패런트 아이디 추가
-      // if(parentId)
-      //   createCommentDto.parentId = Number(parentId);
-
-      createCommentDto.uid = userToken;
-      createCommentDto.unickname = nicknameToken;
-
       await this.commentService.create(createCommentDto, category, boardId);
       return res.status(201).json({message : "댓글 생성 성공", category, id})
     } catch (err) {

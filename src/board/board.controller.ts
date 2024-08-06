@@ -1,9 +1,9 @@
-import { Controller, Get, Post, Body, Param, Query, Res, InternalServerErrorException, UseInterceptors, UploadedFile, Headers, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query, Res, InternalServerErrorException, UseInterceptors, UploadedFile, Headers, ValidationPipe, Req } from '@nestjs/common';
 import { BoardService } from './board.service';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { ApiBody, ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Board } from './entities/board.entity';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'src/lib/multer.config';
 // import { IBoard } from './interface/boaard.interface';
@@ -110,6 +110,16 @@ export class BoardController {
       console.error('Search error:', err.message);
       throw new InternalServerErrorException (err.message)
     }
+  }
+
+  // 쿠키 존재하는지 확인
+  @Get("Login/cookie/exist")
+  @ApiOperation({summary : "쿠키 존재하는지 확인"})
+  cookieCheckController(
+    @Req() req : Request
+  ) {
+    const hasToken = req.cookies.token ? true : false;
+    return { isLogin : hasToken};
   }
 
 }

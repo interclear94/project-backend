@@ -77,6 +77,10 @@ let BoardController = class BoardController {
             throw new common_1.InternalServerErrorException(err.message);
         }
     }
+    cookieCheckController(req) {
+        const hasToken = req.cookies.token ? true : false;
+        return { isLogin: hasToken };
+    }
 };
 exports.BoardController = BoardController;
 __decorate([
@@ -132,6 +136,14 @@ __decorate([
     __metadata("design:paramtypes", [String, String, String, Object]),
     __metadata("design:returntype", Promise)
 ], BoardController.prototype, "searchController", null);
+__decorate([
+    (0, common_1.Get)("Login/cookie/exist"),
+    (0, swagger_1.ApiOperation)({ summary: "쿠키 존재하는지 확인" }),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], BoardController.prototype, "cookieCheckController", null);
 exports.BoardController = BoardController = __decorate([
     (0, swagger_1.ApiTags)("게시판 API"),
     (0, common_1.Controller)('board'),

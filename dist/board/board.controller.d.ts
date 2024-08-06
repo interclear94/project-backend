@@ -1,6 +1,6 @@
 import { BoardService } from './board.service';
 import { CreateBoardDto } from './dto/create-board.dto';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 export declare class BoardController {
     private readonly boardService;
     constructor(boardService: BoardService);
@@ -8,4 +8,7 @@ export declare class BoardController {
     findAll(limit: string, offset: string, res: Response): Promise<Response>;
     findCategory(limit: string, offset: string, category: string, res: Response): Promise<Response>;
     searchController(word: string, limit: string, offset: string, res: Response): Promise<Response>;
+    cookieCheckController(req: Request): {
+        isLogin: boolean;
+    };
 }

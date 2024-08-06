@@ -14,6 +14,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { ConfigModule } from '@nestjs/config';
 import { BoardModule } from './board/board.module';
+import { User } from './users/entities/users.entity';
 
 @Module({
   imports: [
@@ -31,18 +32,18 @@ import { BoardModule } from './board/board.module';
       sync: { force: false },
       autoLoadModels: true,
       synchronize: true,
-      logging: true,
+      logging: false,
     }),
+    UsersModule,
+    AuthModule,
     DetailPageModule,
+    BoardModule,
     CommentModule,
     LikesModule,
-    BoardModule,
     FaqModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'static'),
     }),
-    UsersModule,
-    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
