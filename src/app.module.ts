@@ -1,10 +1,9 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { FaqModule } from './faq/faq.module';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { User } from './users/entities/users.entity';
 import { AuthModule } from './auth/auth.module';
-import { JwtModule } from '@nestjs/jwt';
 import { HttpModule } from '@nestjs/axios';
 import  cookie from'cookie-parser';
 import { UsersModule } from './users/users.module';
@@ -38,6 +37,7 @@ import { BoardModule } from './board/board.module';
     CommentModule,
     LikesModule,
     BoardModule,
+    FaqModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'static'),
     }),
