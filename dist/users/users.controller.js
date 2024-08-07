@@ -47,6 +47,7 @@ let UsersController = class UsersController {
     async getProfileModify(req) {
         try {
             const user = await this.usersService.verifyToken(req.cookies.token);
+            console.log(user);
             const users = await this.usersService.getUserById(user);
             return users;
         }
