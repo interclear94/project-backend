@@ -40,6 +40,7 @@ export class CommentService {
         id: reply.id,
         uid: reply.uid,
         unickname: reply.unickname,
+        uprofile : reply.uprofile,
         boardId: reply.boardId,
         category: reply.category,
         replyContent: reply.deletedAt ? '삭제된 댓글입니다.' : reply.replyContent,
