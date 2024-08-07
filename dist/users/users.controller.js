@@ -66,7 +66,7 @@ let UsersController = class UsersController {
         return res.status(200).json({ message: "업데이트 성공" });
     }
     async logout(req, response) {
-        response.clearCookie('token', { path: '/' });
+        response.clearCookie('token', { path: '/', httpOnly: true, sameSite: "none", secure: true });
         return response.status(200).json({ message: '로그아웃 성공' });
     }
 };

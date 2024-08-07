@@ -39,6 +39,13 @@ __decorate([
     __metadata("design:type", String)
 ], Reply.prototype, "unickname", void 0);
 __decorate([
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.STRING,
+        allowNull: true,
+    }),
+    __metadata("design:type", String)
+], Reply.prototype, "uprofile", void 0);
+__decorate([
     (0, sequelize_typescript_1.ForeignKey)(() => board_entity_1.Board),
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.INTEGER,

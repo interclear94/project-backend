@@ -33,7 +33,7 @@ export class BoardController {
     @Req() req : Request,
     ) : Promise<Response> {
     try {
-     
+    
       const user = await this.userService.verifyToken(req.cookies.token);
 
       // 파일 있을 경우 데이터베이스에 추가할 경로 입력
@@ -48,6 +48,7 @@ export class BoardController {
       if(user.profile) {
         createBoardDto.uprofile = user.profile
       }
+      console.log(user);
 
       await this.boardService.create(createBoardDto, category);
       return res.status(201).json({message: "게시물 생성 성공!", category})

@@ -31,7 +31,7 @@ export class UsersController {
   async getProfile(@Req() req:Request) {
     try{
       const user = await this.usersService.verifyToken(req.cookies.token);
-      // console.log(user)
+      console.log(user)
       const users = await this.usersService.getUserById(user);
       return users;
     }catch(error){

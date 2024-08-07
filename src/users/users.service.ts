@@ -68,7 +68,7 @@ async update(userId: string, updateUserDto: UpdateUserDto): Promise<User> {
     console.log('아이디 찾을수 없음')
     throw new NotFoundException(`아이디를 찾을수 없음.`);
   }
-
+console.log(updateUserDto)
   if (updateUserDto.upw) {
     console.log('비밀번호 바뀜')
     updateUserDto.upw = await bcrypt.hash(updateUserDto.upw.toString(), this.saltRounds);
