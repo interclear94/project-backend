@@ -11,5 +11,8 @@ export class UpdateUserDto{
     uprofile? : string;
 
     @IsString()
-    umessage? : string;
+    uemail? : string;
+
+    @IsString()
+    uphone? : number;
 }

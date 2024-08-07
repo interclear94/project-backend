@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { error } from 'console';
+import { clear, error } from 'console';
 import { LoginUserDto } from 'src/users/dto/create-user.dto';
 import { UsersService } from 'src/users/users.service';
 
@@ -30,5 +30,9 @@ export class AuthService {
         const payload = { username: user.dataValues.uid, sub: user.dataValues.unickname};
 
         return this.jwtService.sign(payload);
+    }
+
+    logout(){
+        clear()
     }
 }

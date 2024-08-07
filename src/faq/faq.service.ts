@@ -14,7 +14,6 @@ export class FaqService {
   // 글 추가 
   create(faqTitle:string, faqContent:string){
     try {
-      console.log("서비스")
       return this.faqModel.create({
         faqTitle, faqContent  
       })
@@ -62,7 +61,7 @@ export class FaqService {
   
   async queryFind(keyword: string){
     return await this.faqModel.findAll({
-      attributes : ['faqTitle', 'faqContent'],
+      attributes : ['id', 'faqTitle', 'faqContent'],
       where: {
         [Op.or]: [{
           faqTitle : { [Op.like] : `%${keyword}%`},

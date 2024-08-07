@@ -31,6 +31,14 @@ export class Reply extends Model<Reply>{
          allowNull : false
      })
      unickname! : string
+
+     // 유저 프로필 사진
+     // @ForeignKey(()=> User)
+     @Column({
+        type: DataType.STRING,
+        allowNull: true,
+     })
+     uprofile?: string;
  
      // 본문 글 인덱스
      @ForeignKey(()=>Board)
