@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var _a, _b, _c, _d, _e;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DetailPageController = void 0;
 const common_1 = require("@nestjs/common");
@@ -18,6 +19,7 @@ const detail_page_service_1 = require("./detail-page.service");
 const update_detail_page_dto_1 = require("./dto/update-detail-page.dto");
 const board_entity_1 = require("../board/entities/board.entity");
 const swagger_1 = require("@nestjs/swagger");
+const express_1 = require("express");
 const platform_express_1 = require("@nestjs/platform-express");
 const multer_config_1 = require("../lib/multer.config");
 const users_service_1 = require("../users/users.service");
@@ -84,7 +86,7 @@ __decorate([
     __param(3, (0, common_1.Query)('offset')),
     __param(4, (0, common_1.Res)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, String, String, Object]),
+    __metadata("design:paramtypes", [String, String, String, String, typeof (_a = typeof express_1.Response !== "undefined" && express_1.Response) === "function" ? _a : Object]),
     __metadata("design:returntype", Promise)
 ], DetailPageController.prototype, "getDetailPage", null);
 __decorate([
@@ -100,7 +102,7 @@ __decorate([
     __param(4, (0, common_1.Res)()),
     __param(5, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, update_detail_page_dto_1.UpdateDetailPageDto, Object, Object, Object]),
+    __metadata("design:paramtypes", [String, String, update_detail_page_dto_1.UpdateDetailPageDto, Object, typeof (_b = typeof express_1.Response !== "undefined" && express_1.Response) === "function" ? _b : Object, typeof (_c = typeof express_1.Request !== "undefined" && express_1.Request) === "function" ? _c : Object]),
     __metadata("design:returntype", Promise)
 ], DetailPageController.prototype, "update", null);
 __decorate([
@@ -111,7 +113,7 @@ __decorate([
     __param(2, (0, common_1.Res)()),
     __param(3, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, Object, Object]),
+    __metadata("design:paramtypes", [String, String, typeof (_d = typeof express_1.Response !== "undefined" && express_1.Response) === "function" ? _d : Object, typeof (_e = typeof express_1.Request !== "undefined" && express_1.Request) === "function" ? _e : Object]),
     __metadata("design:returntype", Promise)
 ], DetailPageController.prototype, "remove", null);
 exports.DetailPageController = DetailPageController = __decorate([

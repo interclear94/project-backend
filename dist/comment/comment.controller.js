@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var _a, _b, _c, _d, _e, _f;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CommentController = void 0;
 const common_1 = require("@nestjs/common");
@@ -19,6 +20,7 @@ const create_comment_dto_1 = require("./dto/create-comment.dto");
 const update_comment_dto_1 = require("./dto/update-comment.dto");
 const comment_entity_1 = require("./entities/comment.entity");
 const swagger_1 = require("@nestjs/swagger");
+const express_1 = require("express");
 const users_service_1 = require("../users/users.service");
 let CommentController = class CommentController {
     constructor(commentService, userService) {
@@ -93,7 +95,7 @@ __decorate([
     __param(3, (0, common_1.Res)()),
     __param(4, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_comment_dto_1.CreateCommentDto, String, String, Object, Object]),
+    __metadata("design:paramtypes", [create_comment_dto_1.CreateCommentDto, String, String, typeof (_a = typeof express_1.Response !== "undefined" && express_1.Response) === "function" ? _a : Object, typeof (_b = typeof express_1.Request !== "undefined" && express_1.Request) === "function" ? _b : Object]),
     __metadata("design:returntype", Promise)
 ], CommentController.prototype, "create", null);
 __decorate([
@@ -107,7 +109,7 @@ __decorate([
     __param(3, (0, common_1.Req)()),
     __param(4, (0, common_1.Param)('categort')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, update_comment_dto_1.UpdateCommentDto, Object, Object, String]),
+    __metadata("design:paramtypes", [String, update_comment_dto_1.UpdateCommentDto, typeof (_c = typeof express_1.Response !== "undefined" && express_1.Response) === "function" ? _c : Object, typeof (_d = typeof express_1.Request !== "undefined" && express_1.Request) === "function" ? _d : Object, String]),
     __metadata("design:returntype", Promise)
 ], CommentController.prototype, "update", null);
 __decorate([
@@ -120,7 +122,7 @@ __decorate([
     __param(3, (0, common_1.Res)()),
     __param(4, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, String, Object, Object]),
+    __metadata("design:paramtypes", [String, String, String, typeof (_e = typeof express_1.Response !== "undefined" && express_1.Response) === "function" ? _e : Object, typeof (_f = typeof express_1.Request !== "undefined" && express_1.Request) === "function" ? _f : Object]),
     __metadata("design:returntype", Promise)
 ], CommentController.prototype, "remove", null);
 exports.CommentController = CommentController = __decorate([

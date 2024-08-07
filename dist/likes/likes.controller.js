@@ -11,10 +11,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var _a, _b, _c;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LikesController = void 0;
 const common_1 = require("@nestjs/common");
 const likes_service_1 = require("./likes.service");
+const express_1 = require("express");
 const swagger_1 = require("@nestjs/swagger");
 const users_service_1 = require("../users/users.service");
 let LikesController = class LikesController {
@@ -54,7 +56,7 @@ __decorate([
     __param(3, (0, common_1.Res)()),
     __param(4, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, String, Object, Object]),
+    __metadata("design:paramtypes", [String, String, String, typeof (_a = typeof express_1.Response !== "undefined" && express_1.Response) === "function" ? _a : Object, typeof (_b = typeof express_1.Request !== "undefined" && express_1.Request) === "function" ? _b : Object]),
     __metadata("design:returntype", Promise)
 ], LikesController.prototype, "likeToggle", null);
 __decorate([
@@ -66,7 +68,7 @@ __decorate([
     __param(2, (0, common_1.Param)('category')),
     __param(3, (0, common_1.Res)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, String, Object]),
+    __metadata("design:paramtypes", [String, String, String, typeof (_c = typeof express_1.Response !== "undefined" && express_1.Response) === "function" ? _c : Object]),
     __metadata("design:returntype", Promise)
 ], LikesController.prototype, "findUserLikeInfo", null);
 exports.LikesController = LikesController = __decorate([
