@@ -31,9 +31,9 @@ export class BoardService {
   // DTO로 받아와서 메서드로 sql에 저장
   async create(createBoardDto: CreateBoardDto, category:string): Promise<Board> {
     try {
-      const { boardTitle, boardContent, uid, unickname, boardFile } = createBoardDto;
+      const { boardTitle, boardContent, uid, unickname, uprofile, boardFile } = createBoardDto;
       return await this.BoardEntity.create({
-        boardTitle, boardContent, uid, unickname, boardFile, categories: category
+        boardTitle, boardContent, uid, unickname, uprofile, boardFile, categories: category
       })
     } catch (err) {
       if(err.message === "SequelizeForeignKeyConstraintError") {
