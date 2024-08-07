@@ -31,7 +31,7 @@ export class UsersController {
   async getProfile(@Req() req:Request) {
     try{
       const user = await this.usersService.verifyToken(req.cookies.token);
-      // console.log(user)
+      console.log(user)
       const users = await this.usersService.getUserById(user);
       return users;
     }catch(error){
@@ -73,7 +73,7 @@ export class UsersController {
     return res.status(200).json({message : "업데이트 성공"})
   }
   
-  @Post('logout')
+  @Post('logout/out')
   async logout(@Req()req:Request, @Res() response: Response){
     response.clearCookie('token',{ path:'/' });
 
