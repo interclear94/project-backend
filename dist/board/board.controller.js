@@ -35,6 +35,9 @@ let BoardController = class BoardController {
             }
             createBoardDto.uid = user.username;
             createBoardDto.unickname = user.sub;
+            if (user.profile) {
+                createBoardDto.uprofile = user.profile;
+            }
             await this.boardService.create(createBoardDto, category);
             return res.status(201).json({ message: "게시물 생성 성공!", category });
         }

@@ -57,6 +57,14 @@ export class Board extends Model<Board> {
     })
     unickname!: string;
 
+    // 유저 프로필 사진
+    // @ForeignKey(()=> User)
+    @Column({
+        type: DataType.STRING,
+        allowNull: true,
+    })
+    uprofile?: string;
+
     // 카테고리
     @Column({
         type: DataType.STRING,
@@ -85,7 +93,7 @@ export class Board extends Model<Board> {
         allowNull: false,
         defaultValue : 0
     })
-    numberOfComment : number;
+    numberOfComment! : number;
 
     // User table의 uid와 Borad table의 uid를 연결
     // @BelongsTo(() => User, { foreignKey: 'uid' })

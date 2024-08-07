@@ -75,7 +75,7 @@ export class UsersController {
   
   @Post('logout/out')
   async logout(@Req()req:Request, @Res() response: Response){
-    response.clearCookie('token',{ path:'/' });
+    response.clearCookie('token',{ path:'/', httpOnly : true, sameSite :"none", secure:true });
 
     return response.status(200).json({message: '로그아웃 성공'});
   }

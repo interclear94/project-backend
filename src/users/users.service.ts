@@ -78,5 +78,16 @@ console.log(updateUserDto)
   console.log('정보바뀜')
   return user;
   }
+
+  async getUserInfo(uid : string) : Promise<User> {
+    const userinfo = await this.userModel.findOne({ where : { uid }})
+    if (!userinfo) {
+      console.log('아이디 찾을수 없음')
+      throw new NotFoundException(`아이디를 찾을수 없음.`);
+    }
+
+    return userinfo
+
+  }
 }
 
