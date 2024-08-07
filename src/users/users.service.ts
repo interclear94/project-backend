@@ -95,8 +95,14 @@ export class UsersService {
 
   async verifyToken(token: string) {
     try {
-      return this.jwtService.verify(token); // JWT 검증
+      const reuslt = this.jwtService.verify(token, {
+        secret: process.env.Jwt_Key, // 비밀 키를 환경 변수에서 가져옵니다.
+      }); // JWT 검증
+      return reuslt;
+
     } catch (error) {
+      console.log("오류로 빠지는지 확인")
+        console.log(error)
         throw new UnauthorizedException('유효하지 않은 토큰');
     }
 }

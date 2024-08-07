@@ -47,8 +47,6 @@ export class DetailPageService {
     if(!content) {
       throw new Error("Post does not exist");
     }
-
-
     
     const {boardFile, boardContent, boardTitle} = updateDetailPageDto;
     
@@ -60,7 +58,7 @@ export class DetailPageService {
 
     // 파일 업데이트 시 새 파일이 있으면 기존 파일 삭제
     try {
-      if((content.boardFile !== boardFile) && (boardFile)) {
+      if((content.boardFile !== boardFile) && (boardFile) && (content.boardFile)) {
         const staticPath = path.join(__dirname, "..", "..", "static", content.boardFile)
         await fs.unlink(staticPath);
       }

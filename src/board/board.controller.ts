@@ -1,17 +1,21 @@
-import { Controller, Get, Post, Body, Param, Query, Res, InternalServerErrorException, UseInterceptors, UploadedFile, Headers, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query, Res, InternalServerErrorException, UseInterceptors, UploadedFile, Headers, ValidationPipe, Req, UnauthorizedException } from '@nestjs/common';
 import { BoardService } from './board.service';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { ApiBody, ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Board } from './entities/board.entity';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'src/lib/multer.config';
+import { UsersService } from 'src/users/users.service';
 // import { IBoard } from './interface/boaard.interface';
 
 @ApiTags("게시판 API")
 @Controller('board')
 export class BoardController {
-  constructor(private readonly boardService: BoardService) {}
+  constructor(
+    private readonly boardService: BoardService,
+    private readonly userService : UsersService
+  ) {}
 
   // 게시물 생성 컨트롤러
   @Post(':category/postCreate')
@@ -23,13 +27,14 @@ export class BoardController {
   @ApiHeader({name: 'unickname', description:"닉네임 토큰", required: true})
   async create(
     @Body(new ValidationPipe()) createBoardDto: CreateBoardDto,
-    @Headers('userToken') userToken: string, // 유저 id 토큰 받아오기
-    @Headers('unickname') nicknameToken: string, // 유저 닉네임 토큰 받아오기
     @UploadedFile() file : Express.Multer.File, // 멀터로 파일 받기
     @Param('category') category:string,
     @Res() res : Response,
+    @Req() req : Request,
     ) : Promise<Response> {
     try {
+     
+      const user = await this.userService.verifyToken(req.cookies.token);
 
       // 파일 있을 경우 데이터베이스에 추가할 경로 입력
       if(file) {
@@ -38,16 +43,19 @@ export class BoardController {
       }
 
       // 토큰에서 유저 아이디랑 닉네임 받아오기 (추후 복호화 필요)
-      createBoardDto.uid = userToken;
-      createBoardDto.unickname = nicknameToken;
+      createBoardDto.uid = user.username;
+      createBoardDto.unickname = user.sub;
 
       await this.boardService.create(createBoardDto, category);
       return res.status(201).json({message: "게시물 생성 성공!", category})
     } catch (err) {
       if(err.message === "ForeignKeyConstraintError") {
-        return res.status(400).json({error : "외래키 오류"})
+        res.status(400).json({ error: '외래키 오류' });
+      } else if (err instanceof UnauthorizedException) {
+        throw new UnauthorizedException("유효하지 않은 토큰")
+      } else {
+        res.status(400).json({error : err.message});
       }
-      return res.status(400).json({error : err.message});
     }
   }
 
@@ -100,7 +108,6 @@ export class BoardController {
     @Query('offset') offset: string = '0',
     @Res() res : Response,
   ) : Promise<Response> {
-    console.log("오는지 확인")
     let parsedLimit : number = Number(limit);
     let parsedOffset : number = Number(offset);
     try {
@@ -110,6 +117,16 @@ export class BoardController {
       console.error('Search error:', err.message);
       throw new InternalServerErrorException (err.message)
     }
+  }
+
+  // 쿠키 존재하는지 확인
+  @Get("Login/cookie/exist")
+  @ApiOperation({summary : "쿠키 존재하는지 확인"})
+  cookieCheckController(
+    @Req() req : Request
+  ) {
+    const hasToken = req.cookies.token ? true : false;
+    return { isLogin : hasToken};
   }
 
 }
