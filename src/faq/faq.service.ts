@@ -43,7 +43,6 @@ export class FaqService {
   // 글 업데이트
   async update(id:number, faqTitle:string, faqContent:string){
     try {
-      console.log(await this.faqModel.update({faqTitle, faqContent},{ where: {id} }))
       return await this.faqModel.update({faqTitle, faqContent},{ where: {id} })
     } catch (error) {
       console.log(error, "글 업데이트가 안됐어")

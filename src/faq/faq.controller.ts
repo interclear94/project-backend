@@ -8,7 +8,7 @@ export class FaqController {
 
   @Post("/admin")
   // 글작성 후 페이지 넘김
-  @Redirect('http://127.0.0.1:5500/frontend/html/faq/customercenter.html')
+  @Redirect('http://127.0.0.1:5500/nestjsProject/frontend/html/faq/customercenter.html')
   create(@Body('faqTitle') faqTitle:string, @Body('faqContent') faqContent: string){
     return this.faqService.create(faqTitle, faqContent);
   }

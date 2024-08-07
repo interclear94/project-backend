@@ -8,7 +8,7 @@ async function bootstrap() {
     (0, swagget_1.setupSwagger)(app);
     app.enableCors({
         origin: "http://127.0.0.1:5501",
-        methods: ['GET', 'HEAD', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+        methods: ['GET', 'HEAD', 'PATCH', 'POST', 'DELETE', 'OPTIONS', 'PUT'],
         allowedHeaders: ['Content-Type', 'userToken', 'unickname', 'parentId'],
         credentials: true
     });

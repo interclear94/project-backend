@@ -27,7 +27,7 @@ export class AuthService {
     }
 
     login(user:any){
-        const payload = { username: user.dataValues.uid, sub: user.dataValues.unickname};
+        const payload = { username: user.dataValues.uid, sub: user.dataValues.unickname, profile: user.dataValues.uprofile};
 
         return this.jwtService.sign(payload);
     }

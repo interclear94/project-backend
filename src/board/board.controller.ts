@@ -33,7 +33,7 @@ export class BoardController {
     @Req() req : Request,
     ) : Promise<Response> {
     try {
-     
+    
       const user = await this.userService.verifyToken(req.cookies.token);
 
       // 파일 있을 경우 데이터베이스에 추가할 경로 입력
