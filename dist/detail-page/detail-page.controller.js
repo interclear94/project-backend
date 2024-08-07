@@ -20,9 +20,11 @@ const board_entity_1 = require("../board/entities/board.entity");
 const swagger_1 = require("@nestjs/swagger");
 const platform_express_1 = require("@nestjs/platform-express");
 const multer_config_1 = require("../lib/multer.config");
+const users_service_1 = require("../users/users.service");
 let DetailPageController = class DetailPageController {
-    constructor(detailPageService) {
+    constructor(detailPageService, userService) {
         this.detailPageService = detailPageService;
+        this.userService = userService;
     }
     async getDetailPage(category, id, limit = '10', offset = '0', res) {
         const parsedId = Number(id);
@@ -36,8 +38,9 @@ let DetailPageController = class DetailPageController {
             throw new common_1.InternalServerErrorException(err.message);
         }
     }
-    async update(category, id, updateDetailPageDto, file, res) {
+    async update(category, id, updateDetailPageDto, file, res, req) {
         try {
+            await this.userService.verifyToken(req.cookies.token);
             if (file) {
                 const filePath = '/img/' + file.filename;
                 updateDetailPageDto.boardFile = filePath;
@@ -46,16 +49,27 @@ let DetailPageController = class DetailPageController {
             return res.status(200).json({ message: "게시물 수정 완료", id, category });
         }
         catch (err) {
-            throw new common_1.InternalServerErrorException(err.message);
+            if (err instanceof common_1.UnauthorizedException) {
+                throw new common_1.UnauthorizedException("유효하지 않은 토큰");
+            }
+            else {
+                throw new common_1.InternalServerErrorException(err.mesaage);
+            }
         }
     }
-    async remove(id, category, res) {
+    async remove(id, category, res, req) {
         try {
+            await this.userService.verifyToken(req.cookies.token);
             await this.detailPageService.softRemove(+id);
             return res.status(200).json({ message: "게시물 삭제 완료", category });
         }
         catch (err) {
-            throw new common_1.InternalServerErrorException(err.message);
+            if (err instanceof common_1.UnauthorizedException) {
+                throw new common_1.UnauthorizedException("유효하지 않은 토큰");
+            }
+            else {
+                throw new common_1.InternalServerErrorException(err.mesaage);
+            }
         }
     }
 };
@@ -84,8 +98,9 @@ __decorate([
     __param(2, (0, common_1.Body)()),
     __param(3, (0, common_1.UploadedFile)()),
     __param(4, (0, common_1.Res)()),
+    __param(5, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, update_detail_page_dto_1.UpdateDetailPageDto, Object, Object]),
+    __metadata("design:paramtypes", [String, String, update_detail_page_dto_1.UpdateDetailPageDto, Object, Object, Object]),
     __metadata("design:returntype", Promise)
 ], DetailPageController.prototype, "update", null);
 __decorate([
@@ -94,13 +109,15 @@ __decorate([
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Param)('category')),
     __param(2, (0, common_1.Res)()),
+    __param(3, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, Object]),
+    __metadata("design:paramtypes", [String, String, Object, Object]),
     __metadata("design:returntype", Promise)
 ], DetailPageController.prototype, "remove", null);
 exports.DetailPageController = DetailPageController = __decorate([
     (0, swagger_1.ApiTags)("상세페이지 API"),
     (0, common_1.Controller)('board/:category'),
-    __metadata("design:paramtypes", [detail_page_service_1.DetailPageService])
+    __metadata("design:paramtypes", [detail_page_service_1.DetailPageService,
+        users_service_1.UsersService])
 ], DetailPageController);
 //# sourceMappingURL=detail-page.controller.js.map

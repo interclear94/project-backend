@@ -20,12 +20,15 @@ const swagger_1 = require("@nestjs/swagger");
 const board_entity_1 = require("./entities/board.entity");
 const platform_express_1 = require("@nestjs/platform-express");
 const multer_config_1 = require("../lib/multer.config");
+const users_service_1 = require("../users/users.service");
 let BoardController = class BoardController {
-    constructor(boardService) {
+    constructor(boardService, userService) {
         this.boardService = boardService;
+        this.userService = userService;
     }
-    async create(createBoardDto, userToken, nicknameToken, file, category, res) {
+    async create(createBoardDto, userToken, nicknameToken, file, category, res, req) {
         try {
+            await this.userService.verifyToken(req.cookies.token);
             if (file) {
                 const filePath = '/img/' + file.filename;
                 createBoardDto.boardFile = filePath;
@@ -37,9 +40,14 @@ let BoardController = class BoardController {
         }
         catch (err) {
             if (err.message === "ForeignKeyConstraintError") {
-                return res.status(400).json({ error: "외래키 오류" });
+                res.status(400).json({ error: '외래키 오류' });
             }
-            return res.status(400).json({ error: err.message });
+            else if (err instanceof common_1.UnauthorizedException) {
+                throw new common_1.UnauthorizedException("유효하지 않은 토큰");
+            }
+            else {
+                res.status(400).json({ error: err.message });
+            }
         }
     }
     async findAll(limit = '10', offset = '0', res) {
@@ -97,8 +105,9 @@ __decorate([
     __param(3, (0, common_1.UploadedFile)()),
     __param(4, (0, common_1.Param)('category')),
     __param(5, (0, common_1.Res)()),
+    __param(6, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_board_dto_1.CreateBoardDto, String, String, Object, String, Object]),
+    __metadata("design:paramtypes", [create_board_dto_1.CreateBoardDto, String, String, Object, String, Object, Object]),
     __metadata("design:returntype", Promise)
 ], BoardController.prototype, "create", null);
 __decorate([
@@ -147,6 +156,7 @@ __decorate([
 exports.BoardController = BoardController = __decorate([
     (0, swagger_1.ApiTags)("게시판 API"),
     (0, common_1.Controller)('board'),
-    __metadata("design:paramtypes", [board_service_1.BoardService])
+    __metadata("design:paramtypes", [board_service_1.BoardService,
+        users_service_1.UsersService])
 ], BoardController);
 //# sourceMappingURL=board.controller.js.map

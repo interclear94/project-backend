@@ -13,14 +13,17 @@ const comment_controller_1 = require("./comment.controller");
 const sequelize_1 = require("@nestjs/sequelize");
 const comment_entity_1 = require("./entities/comment.entity");
 const board_entity_1 = require("../board/entities/board.entity");
+const jwt_1 = require("@nestjs/jwt");
+const users_service_1 = require("../users/users.service");
+const users_entity_1 = require("../users/entities/users.entity");
 let CommentModule = class CommentModule {
 };
 exports.CommentModule = CommentModule;
 exports.CommentModule = CommentModule = __decorate([
     (0, common_1.Module)({
-        imports: [sequelize_1.SequelizeModule.forFeature([comment_entity_1.Reply, board_entity_1.Board])],
+        imports: [sequelize_1.SequelizeModule.forFeature([comment_entity_1.Reply, board_entity_1.Board, users_entity_1.User])],
         controllers: [comment_controller_1.CommentController],
-        providers: [comment_service_1.CommentService],
+        providers: [comment_service_1.CommentService, jwt_1.JwtService, users_service_1.UsersService],
         exports: [comment_service_1.CommentService]
     })
 ], CommentModule);

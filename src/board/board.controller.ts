@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Query, Res, InternalServerErrorException, UseInterceptors, UploadedFile, Headers, ValidationPipe, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query, Res, InternalServerErrorException, UseInterceptors, UploadedFile, Headers, ValidationPipe, Req, UnauthorizedException } from '@nestjs/common';
 import { BoardService } from './board.service';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { ApiBody, ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -6,12 +6,16 @@ import { Board } from './entities/board.entity';
 import { Request, Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'src/lib/multer.config';
+import { UsersService } from 'src/users/users.service';
 // import { IBoard } from './interface/boaard.interface';
 
 @ApiTags("게시판 API")
 @Controller('board')
 export class BoardController {
-  constructor(private readonly boardService: BoardService) {}
+  constructor(
+    private readonly boardService: BoardService,
+    private readonly userService : UsersService
+  ) {}
 
   // 게시물 생성 컨트롤러
   @Post(':category/postCreate')
@@ -28,8 +32,11 @@ export class BoardController {
     @UploadedFile() file : Express.Multer.File, // 멀터로 파일 받기
     @Param('category') category:string,
     @Res() res : Response,
+    @Req() req : Request,
     ) : Promise<Response> {
     try {
+
+      await this.userService.verifyToken(req.cookies.token);
 
       // 파일 있을 경우 데이터베이스에 추가할 경로 입력
       if(file) {
@@ -45,9 +52,12 @@ export class BoardController {
       return res.status(201).json({message: "게시물 생성 성공!", category})
     } catch (err) {
       if(err.message === "ForeignKeyConstraintError") {
-        return res.status(400).json({error : "외래키 오류"})
+        res.status(400).json({ error: '외래키 오류' });
+      } else if (err instanceof UnauthorizedException) {
+        throw new UnauthorizedException("유효하지 않은 토큰")
+      } else {
+        res.status(400).json({error : err.message});
       }
-      return res.status(400).json({error : err.message});
     }
   }
 

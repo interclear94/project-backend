@@ -16,19 +16,27 @@ exports.LikesController = void 0;
 const common_1 = require("@nestjs/common");
 const likes_service_1 = require("./likes.service");
 const swagger_1 = require("@nestjs/swagger");
+const users_service_1 = require("../users/users.service");
 let LikesController = class LikesController {
-    constructor(likesService) {
+    constructor(likesService, userService) {
         this.likesService = likesService;
+        this.userService = userService;
     }
-    async likeToggle(userToken, category, id, res) {
+    async likeToggle(userToken, category, id, res, req) {
         const boardId = Number(id);
         const uid = userToken;
         try {
+            await this.userService.verifyToken(req.cookies.token);
             const resultMessage = await this.likesService.updateLikeStatus(boardId, category, uid);
             return res.status(201).json({ mesaage: resultMessage });
         }
         catch (err) {
-            throw new common_1.InternalServerErrorException(err.mesaage);
+            if (err instanceof common_1.UnauthorizedException) {
+                throw new common_1.UnauthorizedException("유효하지 않은 토큰");
+            }
+            else {
+                throw new common_1.InternalServerErrorException(err.mesaage);
+            }
         }
     }
     async findUserLikeInfo(userToken, boardId, category, res) {
@@ -45,8 +53,9 @@ __decorate([
     __param(1, (0, common_1.Param)('category')),
     __param(2, (0, common_1.Param)('id')),
     __param(3, (0, common_1.Res)()),
+    __param(4, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, String, Object]),
+    __metadata("design:paramtypes", [String, String, String, Object, Object]),
     __metadata("design:returntype", Promise)
 ], LikesController.prototype, "likeToggle", null);
 __decorate([
@@ -63,7 +72,8 @@ __decorate([
 ], LikesController.prototype, "findUserLikeInfo", null);
 exports.LikesController = LikesController = __decorate([
     (0, swagger_1.ApiTags)("좋아요"),
-    (0, common_1.Controller)('board/:category'),
-    __metadata("design:paramtypes", [likes_service_1.LikesService])
+    (0, common_1.Controller)('like/:category'),
+    __metadata("design:paramtypes", [likes_service_1.LikesService,
+        users_service_1.UsersService])
 ], LikesController);
 //# sourceMappingURL=likes.controller.js.map

@@ -13,14 +13,17 @@ const likes_controller_1 = require("./likes.controller");
 const sequelize_1 = require("@nestjs/sequelize");
 const like_entity_1 = require("./entities/like.entity");
 const board_entity_1 = require("../board/entities/board.entity");
+const users_service_1 = require("../users/users.service");
+const users_entity_1 = require("../users/entities/users.entity");
+const jwt_1 = require("@nestjs/jwt");
 let LikesModule = class LikesModule {
 };
 exports.LikesModule = LikesModule;
 exports.LikesModule = LikesModule = __decorate([
     (0, common_1.Module)({
-        imports: [sequelize_1.SequelizeModule.forFeature([board_entity_1.Board, like_entity_1.Like])],
+        imports: [sequelize_1.SequelizeModule.forFeature([board_entity_1.Board, like_entity_1.Like, users_entity_1.User])],
         controllers: [likes_controller_1.LikesController],
-        providers: [likes_service_1.LikesService],
+        providers: [likes_service_1.LikesService, users_service_1.UsersService, jwt_1.JwtService],
     })
 ], LikesModule);
 //# sourceMappingURL=likes.module.js.map

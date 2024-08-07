@@ -19,12 +19,15 @@ const create_comment_dto_1 = require("./dto/create-comment.dto");
 const update_comment_dto_1 = require("./dto/update-comment.dto");
 const comment_entity_1 = require("./entities/comment.entity");
 const swagger_1 = require("@nestjs/swagger");
+const users_service_1 = require("../users/users.service");
 let CommentController = class CommentController {
-    constructor(commentService) {
+    constructor(commentService, userService) {
         this.commentService = commentService;
+        this.userService = userService;
     }
-    async create(createCommentDto, category, id, userToken, nicknameToken, res) {
+    async create(createCommentDto, category, id, userToken, nicknameToken, res, req) {
         try {
+            await this.userService.verifyToken(req.cookies.token);
             const boardId = Number(id);
             createCommentDto.uid = userToken;
             createCommentDto.unickname = nicknameToken;
@@ -36,28 +39,45 @@ let CommentController = class CommentController {
             if (err.message === "ForeignKeyConstraintError") {
                 res.status(400).json({ error: '외래키 오류' });
             }
-            res.status(400).json({ error: err.message });
+            else if (err instanceof common_1.UnauthorizedException) {
+                throw new common_1.UnauthorizedException("유효하지 않은 토큰");
+            }
+            else {
+                res.status(400).json({ error: err.message });
+            }
         }
     }
-    async update(id, updateCommentDto, res, category) {
+    async update(id, updateCommentDto, res, req, category) {
         const boardId = Number(id);
         try {
+            await this.userService.verifyToken(req.cookies.token);
             await this.commentService.update(boardId, updateCommentDto);
             res.status(201).json({ message: "게시물 수정 완료", boardId, category });
         }
         catch (err) {
-            throw new common_1.InternalServerErrorException(err.message);
+            if (err instanceof common_1.UnauthorizedException) {
+                throw new common_1.UnauthorizedException("유효하지 않은 토큰");
+            }
+            else {
+                throw new common_1.InternalServerErrorException(err.mesaage);
+            }
         }
     }
-    async remove(boardId, id, category, res) {
+    async remove(boardId, id, category, res, req) {
         try {
+            await this.userService.verifyToken(req.cookies.token);
             const parsedId = Number(id);
             const parseBoardId = Number(boardId);
             await this.commentService.softRemove(parsedId, parseBoardId);
             return res.status(200).json({ message: "게시물 삭제 완료", parsedId, category });
         }
         catch (err) {
-            throw new common_1.InternalServerErrorException(err.message);
+            if (err instanceof common_1.UnauthorizedException) {
+                throw new common_1.UnauthorizedException("유효하지 않은 토큰");
+            }
+            else {
+                throw new common_1.InternalServerErrorException(err.mesaage);
+            }
         }
     }
 };
@@ -73,8 +93,9 @@ __decorate([
     __param(3, (0, common_1.Headers)('userToken')),
     __param(4, (0, common_1.Headers)('unickname')),
     __param(5, (0, common_1.Res)()),
+    __param(6, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_comment_dto_1.CreateCommentDto, String, String, String, String, Object]),
+    __metadata("design:paramtypes", [create_comment_dto_1.CreateCommentDto, String, String, String, String, Object, Object]),
     __metadata("design:returntype", Promise)
 ], CommentController.prototype, "create", null);
 __decorate([
@@ -85,9 +106,10 @@ __decorate([
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)(new common_1.ValidationPipe())),
     __param(2, (0, common_1.Res)()),
-    __param(3, (0, common_1.Param)('categort')),
+    __param(3, (0, common_1.Req)()),
+    __param(4, (0, common_1.Param)('categort')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, update_comment_dto_1.UpdateCommentDto, Object, String]),
+    __metadata("design:paramtypes", [String, update_comment_dto_1.UpdateCommentDto, Object, Object, String]),
     __metadata("design:returntype", Promise)
 ], CommentController.prototype, "update", null);
 __decorate([
@@ -98,13 +120,15 @@ __decorate([
     __param(1, (0, common_1.Param)('id')),
     __param(2, (0, common_1.Param)('category')),
     __param(3, (0, common_1.Res)()),
+    __param(4, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, String, Object]),
+    __metadata("design:paramtypes", [String, String, String, Object, Object]),
     __metadata("design:returntype", Promise)
 ], CommentController.prototype, "remove", null);
 exports.CommentController = CommentController = __decorate([
     (0, swagger_1.ApiTags)("댓글 API"),
     (0, common_1.Controller)('board/:category'),
-    __metadata("design:paramtypes", [comment_service_1.CommentService])
+    __metadata("design:paramtypes", [comment_service_1.CommentService,
+        users_service_1.UsersService])
 ], CommentController);
 //# sourceMappingURL=comment.controller.js.map

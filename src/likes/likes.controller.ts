@@ -1,12 +1,16 @@
-import { Controller, Post, Param, Res, InternalServerErrorException, Headers, Get } from '@nestjs/common';
+import { Controller, Post, Param, Res, InternalServerErrorException, Headers, Get, Req, UnauthorizedException } from '@nestjs/common';
 import { LikesService } from './likes.service';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { UsersService } from 'src/users/users.service';
 
 @ApiTags("좋아요")
-@Controller('board/:category')
+@Controller('like/:category')
 export class LikesController {
-  constructor(private readonly likesService: LikesService) {}
+  constructor(
+    private readonly likesService: LikesService,
+    private readonly userService : UsersService
+  ) {}
 
   // 좋아요!!
   @Post(":id/LikeUpdate")
@@ -17,14 +21,20 @@ export class LikesController {
     @Param('category') category :string,
     @Param('id')id : string,
     @Res() res: Response,
+    @Req() req: Request,
   ) : Promise<Response> {
     const boardId = Number(id);
     const uid = userToken;
     try {
+      await this.userService.verifyToken(req.cookies.token);
       const resultMessage : string = await this.likesService.updateLikeStatus(boardId, category, uid);
       return res.status(201).json({mesaage: resultMessage});
     } catch (err) {
-      throw  new InternalServerErrorException(err.mesaage);
+      if (err instanceof UnauthorizedException) {
+        throw new UnauthorizedException("유효하지 않은 토큰")
+      } else {
+        throw  new InternalServerErrorException(err.mesaage);
+      }
     }
   }
 
