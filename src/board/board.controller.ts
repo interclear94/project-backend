@@ -48,6 +48,7 @@ export class BoardController {
       if(user.profile) {
         createBoardDto.uprofile = user.profile
       }
+      console.log(user);
 
       await this.boardService.create(createBoardDto, category);
       return res.status(201).json({message: "게시물 생성 성공!", category})
