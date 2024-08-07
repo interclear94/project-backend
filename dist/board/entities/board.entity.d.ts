@@ -8,6 +8,7 @@ export declare class Board extends Model<Board> {
     boardView: number;
     uid: string;
     unickname: string;
+    uprofile?: string;
     categories: string;
     boardFile?: string;
     boardLike: number;

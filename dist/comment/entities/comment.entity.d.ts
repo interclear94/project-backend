@@ -4,6 +4,7 @@ export declare class Reply extends Model<Reply> {
     id: number;
     uid: string;
     unickname: string;
+    uprofile?: string;
     boardId: number;
     category: string;
     replyContent: string;

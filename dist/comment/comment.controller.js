@@ -31,12 +31,9 @@ let CommentController = class CommentController {
             const boardId = Number(id);
             createCommentDto.uid = userInfo.username;
             createCommentDto.unickname = userInfo.sub;
-<<<<<<< HEAD
-=======
             if (userInfo.profile) {
                 createCommentDto.uprofile = userInfo.profile;
             }
->>>>>>> 7cf7ad69c4d19b3fbab674a5990e3205f38252d1
             await this.commentService.create(createCommentDto, category, boardId);
             return res.status(201).json({ message: "댓글 생성 성공", category, id });
         }

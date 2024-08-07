@@ -3,5 +3,6 @@ export declare class CreateBoardDto {
     boardContent: string;
     unickname: string;
     uid: string;
+    uprofile?: string;
     boardFile?: string;
 }

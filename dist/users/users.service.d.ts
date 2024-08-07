@@ -12,4 +12,5 @@ export declare class UsersService {
     getUserById(userdata: any): Promise<User>;
     verifyToken(token: string): Promise<any>;
     update(userId: string, updateUserDto: UpdateUserDto): Promise<User>;
+    getUserInfo(uid: string): Promise<User>;
 }
