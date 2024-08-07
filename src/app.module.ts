@@ -14,7 +14,6 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { ConfigModule } from '@nestjs/config';
 import { BoardModule } from './board/board.module';
-import { User } from './users/entities/users.entity';
 
 @Module({
   imports: [
@@ -24,11 +23,11 @@ import { User } from './users/entities/users.entity';
     HttpModule,
     SequelizeModule.forRoot({
       dialect: 'mysql',
-      host: "localhost",
-      port: 3306,
-      username: "root",
-      password: "189189",
-      database: "projectdatabase",
+      host: process.env.MYSQL_USERHOST,
+      port: parseInt(process.env.MYSQL_USERPORT),
+      username: process.env.MYSQL_USERNAME,
+      password: process.env.MYSQL_USERPW,
+      database: process.env.MYSQL_USERDB,
       sync: { force: false },
       autoLoadModels: true,
       synchronize: true,

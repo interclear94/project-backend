@@ -73,7 +73,6 @@ let BoardController = class BoardController {
         }
     }
     async searchController(word, limit = '10', offset = '0', res) {
-        console.log("오는지 확인");
         let parsedLimit = Number(limit);
         let parsedOffset = Number(offset);
         try {

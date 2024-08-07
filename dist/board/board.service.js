@@ -34,7 +34,6 @@ let BoardService = class BoardService {
     async create(createBoardDto, category) {
         try {
             const { boardTitle, boardContent, uid, unickname, boardFile } = createBoardDto;
-            console.log(boardTitle, boardContent, uid, unickname, boardFile);
             return await this.BoardEntity.create({
                 boardTitle, boardContent, uid, unickname, boardFile, categories: category
             });
@@ -62,9 +61,6 @@ let BoardService = class BoardService {
     async searchBoard(limit, offset, word) {
         const safeLimit = Number.isNaN(limit) || limit < 1 ? 10 : limit;
         const safeOffset = Number.isNaN(offset) || offset < 0 ? 0 : offset;
-        console.log('Search term:', word);
-        console.log('Limit:', safeLimit);
-        console.log('Offset:', safeOffset);
         try {
             const foundBoard = await this.BoardEntity.findAll({
                 where: {
@@ -77,7 +73,6 @@ let BoardService = class BoardService {
                 offset: safeOffset,
                 order: [['createdAt', 'DESC']],
             });
-            console.log('Found boards:', foundBoard);
             return foundBoard.map(item => {
                 const plainItem = item.toJSON();
                 return {
