@@ -88,7 +88,6 @@ export class UsersService {
 
   async getUserById(userdata: any ): Promise<User> {
     const uid = userdata.username
-    console.log('??', uid)
     return await this.userModel.findOne({ where: {uid} });
   }
   

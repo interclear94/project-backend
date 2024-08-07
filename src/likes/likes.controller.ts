@@ -5,7 +5,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UsersService } from 'src/users/users.service';
 
 @ApiTags("좋아요")
-@Controller('like/:category')
+@Controller('like')
 export class LikesController {
   constructor(
     private readonly likesService: LikesService,
@@ -13,7 +13,7 @@ export class LikesController {
   ) {}
 
   // 좋아요!!
-  @Post(":id/LikeUpdate")
+  @Post("LikeUpdate/:category/:id")
   @ApiOperation({summary: "좋아요"})
   @ApiResponse({status: 201, description: "좋아요 업데이트 성공"})
   async likeToggle(
@@ -38,16 +38,17 @@ export class LikesController {
   }
 
   // 좋아요 했는지
-  @Get(':id/whetherLike')
+  @Get('whetherLike/:category/:id')
   @ApiOperation({summary: "좋아요 했는지 확인"})
   @ApiResponse({status: 200, description: "좋아요 조회 성공"})
   async findUserLikeInfo(
-    @Headers(`userToken`) userToken : string,
     @Param('id') boardId: string,
     @Param('category') category : string,
     @Res() res : Response,
+    @Req() req : Request,
   ) {
-    const isLike : boolean = await this.likesService.WhetherLike(+boardId, category, userToken);
+    const userinfo = await this.userService.verifyToken(req.cookies.token);
+    const isLike : boolean = await this.likesService.WhetherLike(+boardId, category, userinfo.username);
     return res.status(200).json({message : "조회 성공", isLike});
   }
 }
