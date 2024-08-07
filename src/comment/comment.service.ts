@@ -60,9 +60,9 @@ export class CommentService {
   // 댓글 생성
   async create(createCommentDto: CreateCommentDto, category:string, boardId:number) : Promise<Reply> {
     try {
-      const { uid, unickname, replyContent, replyFile, parentId } = createCommentDto;
+      const { uid, unickname, uprofile, replyContent, replyFile, parentId } = createCommentDto;
       const result =  await this.ReplyEntity.create({
-        uid, unickname, boardId, replyContent, replyFile, category, parentId
+        uid, unickname, uprofile, boardId, replyContent, replyFile, category, parentId
       })
       await this.countReply(boardId);
 
