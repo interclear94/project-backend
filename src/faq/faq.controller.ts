@@ -26,7 +26,7 @@ export class FaqController {
   }
 
   // 글 수정 전 요청
-  @Get("/adminfaq")
+  @Get("/adminfaq/:id")
   async modifyFindOne(@Query("modify",ParseIntPipe) id:number){
     return await this.faqService.modifyFindOne(id);
   }
