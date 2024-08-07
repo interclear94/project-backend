@@ -24,10 +24,9 @@ export class LikesController {
     @Req() req: Request,
   ) : Promise<Response> {
     const boardId = Number(id);
-    const uid = userToken;
     try {
-      await this.userService.verifyToken(req.cookies.token);
-      const resultMessage : string = await this.likesService.updateLikeStatus(boardId, category, uid);
+      const userinfo = await this.userService.verifyToken(req.cookies.token);
+      const resultMessage : string = await this.likesService.updateLikeStatus(boardId, category, userinfo.username);
       return res.status(201).json({mesaage: resultMessage});
     } catch (err) {
       if (err instanceof UnauthorizedException) {

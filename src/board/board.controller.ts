@@ -27,16 +27,14 @@ export class BoardController {
   @ApiHeader({name: 'unickname', description:"닉네임 토큰", required: true})
   async create(
     @Body(new ValidationPipe()) createBoardDto: CreateBoardDto,
-    @Headers('userToken') userToken: string, // 유저 id 토큰 받아오기
-    @Headers('unickname') nicknameToken: string, // 유저 닉네임 토큰 받아오기
     @UploadedFile() file : Express.Multer.File, // 멀터로 파일 받기
     @Param('category') category:string,
     @Res() res : Response,
     @Req() req : Request,
     ) : Promise<Response> {
     try {
-
-      await this.userService.verifyToken(req.cookies.token);
+     
+      const user = await this.userService.verifyToken(req.cookies.token);
 
       // 파일 있을 경우 데이터베이스에 추가할 경로 입력
       if(file) {
@@ -45,8 +43,8 @@ export class BoardController {
       }
 
       // 토큰에서 유저 아이디랑 닉네임 받아오기 (추후 복호화 필요)
-      createBoardDto.uid = userToken;
-      createBoardDto.unickname = nicknameToken;
+      createBoardDto.uid = user.username;
+      createBoardDto.unickname = user.sub;
 
       await this.boardService.create(createBoardDto, category);
       return res.status(201).json({message: "게시물 생성 성공!", category})

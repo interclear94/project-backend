@@ -26,15 +26,15 @@ let BoardController = class BoardController {
         this.boardService = boardService;
         this.userService = userService;
     }
-    async create(createBoardDto, userToken, nicknameToken, file, category, res, req) {
+    async create(createBoardDto, file, category, res, req) {
         try {
-            await this.userService.verifyToken(req.cookies.token);
+            const user = await this.userService.verifyToken(req.cookies.token);
             if (file) {
                 const filePath = '/img/' + file.filename;
                 createBoardDto.boardFile = filePath;
             }
-            createBoardDto.uid = userToken;
-            createBoardDto.unickname = nicknameToken;
+            createBoardDto.uid = user.username;
+            createBoardDto.unickname = user.sub;
             await this.boardService.create(createBoardDto, category);
             return res.status(201).json({ message: "게시물 생성 성공!", category });
         }
@@ -100,14 +100,12 @@ __decorate([
     (0, swagger_1.ApiHeader)({ name: 'userToken', description: "사용자 인증 토큰", required: true }),
     (0, swagger_1.ApiHeader)({ name: 'unickname', description: "닉네임 토큰", required: true }),
     __param(0, (0, common_1.Body)(new common_1.ValidationPipe())),
-    __param(1, (0, common_1.Headers)('userToken')),
-    __param(2, (0, common_1.Headers)('unickname')),
-    __param(3, (0, common_1.UploadedFile)()),
-    __param(4, (0, common_1.Param)('category')),
-    __param(5, (0, common_1.Res)()),
-    __param(6, (0, common_1.Req)()),
+    __param(1, (0, common_1.UploadedFile)()),
+    __param(2, (0, common_1.Param)('category')),
+    __param(3, (0, common_1.Res)()),
+    __param(4, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_board_dto_1.CreateBoardDto, String, String, Object, String, Object, Object]),
+    __metadata("design:paramtypes", [create_board_dto_1.CreateBoardDto, Object, String, Object, Object]),
     __metadata("design:returntype", Promise)
 ], BoardController.prototype, "create", null);
 __decorate([

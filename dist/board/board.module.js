@@ -15,12 +15,13 @@ const board_entity_1 = require("./entities/board.entity");
 const users_service_1 = require("../users/users.service");
 const jwt_1 = require("@nestjs/jwt");
 const users_entity_1 = require("../users/entities/users.entity");
+const auth_module_1 = require("../auth/auth.module");
 let BoardModule = class BoardModule {
 };
 exports.BoardModule = BoardModule;
 exports.BoardModule = BoardModule = __decorate([
     (0, common_1.Module)({
-        imports: [sequelize_1.SequelizeModule.forFeature([board_entity_1.Board, users_entity_1.User])],
+        imports: [sequelize_1.SequelizeModule.forFeature([board_entity_1.Board, users_entity_1.User]), auth_module_1.AuthModule],
         controllers: [board_controller_1.BoardController],
         providers: [board_service_1.BoardService, users_service_1.UsersService, jwt_1.JwtService],
         exports: [BoardModule]

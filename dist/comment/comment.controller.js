@@ -25,12 +25,12 @@ let CommentController = class CommentController {
         this.commentService = commentService;
         this.userService = userService;
     }
-    async create(createCommentDto, category, id, userToken, nicknameToken, res, req) {
+    async create(createCommentDto, category, id, res, req) {
         try {
-            await this.userService.verifyToken(req.cookies.token);
+            const userInfo = await this.userService.verifyToken(req.cookies.token);
             const boardId = Number(id);
-            createCommentDto.uid = userToken;
-            createCommentDto.unickname = nicknameToken;
+            createCommentDto.uid = userInfo.username;
+            createCommentDto.unickname = userInfo.sub;
             await this.commentService.create(createCommentDto, category, boardId);
             return res.status(201).json({ message: "댓글 생성 성공", category, id });
         }
@@ -90,12 +90,10 @@ __decorate([
     __param(0, (0, common_1.Body)(new common_1.ValidationPipe())),
     __param(1, (0, common_1.Param)('category')),
     __param(2, (0, common_1.Param)('id')),
-    __param(3, (0, common_1.Headers)('userToken')),
-    __param(4, (0, common_1.Headers)('unickname')),
-    __param(5, (0, common_1.Res)()),
-    __param(6, (0, common_1.Req)()),
+    __param(3, (0, common_1.Res)()),
+    __param(4, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_comment_dto_1.CreateCommentDto, String, String, String, String, Object, Object]),
+    __metadata("design:paramtypes", [create_comment_dto_1.CreateCommentDto, String, String, Object, Object]),
     __metadata("design:returntype", Promise)
 ], CommentController.prototype, "create", null);
 __decorate([

@@ -7,7 +7,7 @@ export declare class CommentController {
     private readonly commentService;
     private readonly userService;
     constructor(commentService: CommentService, userService: UsersService);
-    create(createCommentDto: CreateCommentDto, category: string, id: string, userToken: string, nicknameToken: string, res: Response, req: Request): Promise<Response>;
+    create(createCommentDto: CreateCommentDto, category: string, id: string, res: Response, req: Request): Promise<Response>;
     update(id: string, updateCommentDto: UpdateCommentDto, res: Response, req: Request, category: string): Promise<void>;
     remove(boardId: string, id: string, category: string, res: Response, req: Request): Promise<Response>;
 }

@@ -1,8 +1,9 @@
-import {Res, Controller, Get, Post, Body, Patch, Param, Delete, UnauthorizedException, UseGuards, Request } from '@nestjs/common';
+import {Res, Controller, Get, Post, Body, Patch, Param, Delete, UnauthorizedException, UseGuards, Req } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/guard/AuthGuard';
 import { CreateUserDto } from './dto/create-user.dto';
+import { Request } from 'express';
 
 @ApiTags('user')
 @Controller('users')
@@ -20,7 +21,7 @@ export class UsersController {
 
 
   @Get('profile')
-  async getProfile(@Request() req) {
+  async getProfile(@Req() req : Request) {
     const user = await this.usersService.verifyToken(req.cookies.token);
     const users = await this.usersService.getUserById(user);
     return users;

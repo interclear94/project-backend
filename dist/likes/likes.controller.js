@@ -24,10 +24,9 @@ let LikesController = class LikesController {
     }
     async likeToggle(userToken, category, id, res, req) {
         const boardId = Number(id);
-        const uid = userToken;
         try {
-            await this.userService.verifyToken(req.cookies.token);
-            const resultMessage = await this.likesService.updateLikeStatus(boardId, category, uid);
+            const userinfo = await this.userService.verifyToken(req.cookies.token);
+            const resultMessage = await this.likesService.updateLikeStatus(boardId, category, userinfo.username);
             return res.status(201).json({ mesaage: resultMessage });
         }
         catch (err) {

@@ -24,19 +24,17 @@ export class CommentController {
     @Body(new ValidationPipe()) createCommentDto: CreateCommentDto,
     @Param('category') category : string,
     @Param('id') id : string,
-    @Headers('userToken') userToken: string, // 유저 id 토큰 받아오기
-    @Headers('unickname') nicknameToken: string, // 유저 닉네임 토큰 받아오기
     @Res() res: Response,
     @Req() req: Request,
     ): Promise<Response> {
     try {
-      await this.userService.verifyToken(req.cookies.token);
+      const userInfo = await this.userService.verifyToken(req.cookies.token);
 
       const boardId = Number(id);
 
       // 토큰에서 닉네임이랑 아이디 가져옴
-      createCommentDto.uid = userToken;
-      createCommentDto.unickname = nicknameToken;
+      createCommentDto.uid = userInfo.username;
+      createCommentDto.unickname = userInfo.sub;
 
       await this.commentService.create(createCommentDto, category, boardId);
       return res.status(201).json({message : "댓글 생성 성공", category, id})
