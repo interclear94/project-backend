@@ -79,7 +79,7 @@ let DetailPageService = class DetailPageService {
             boardContent: boardContent !== undefined ? boardContent : content.boardContent
         };
         try {
-            if ((content.boardFile !== boardFile) && (boardFile)) {
+            if ((content.boardFile !== boardFile) && (boardFile) && (content.boardFile)) {
                 const staticPath = path.join(__dirname, "..", "..", "static", content.boardFile);
                 await fs.unlink(staticPath);
             }

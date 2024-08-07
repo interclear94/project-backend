@@ -55,13 +55,13 @@ export class DetailPageController {
   ): Promise<Response> {
     try{
       await this.userService.verifyToken(req.cookies.token);
+      
 
       // 파일이 있으면 경로 추가
       if(file) {
         const filePath = '/img/' + file.filename;
         updateDetailPageDto.boardFile = filePath;
       }
-
       await this.detailPageService.update(+id, updateDetailPageDto);
       return res.status(200).json({message: "게시물 수정 완료", id, category});
     } catch(err) {

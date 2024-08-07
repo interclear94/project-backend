@@ -108,7 +108,6 @@ export class BoardController {
     @Query('offset') offset: string = '0',
     @Res() res : Response,
   ) : Promise<Response> {
-    console.log("오는지 확인")
     let parsedLimit : number = Number(limit);
     let parsedOffset : number = Number(offset);
     try {
