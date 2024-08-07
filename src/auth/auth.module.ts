@@ -8,7 +8,6 @@ import { UsersService } from 'src/users/users.service';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { User } from 'src/users/entities/users.entity';
 import { ConfigModule } from '@nestjs/config';
-import { UsersModule } from 'src/users/users.module';
 
 @Module({
   imports: [

@@ -1,4 +1,4 @@
-import {Res, Controller, Get, Post, Body, Patch, Param, Delete, UnauthorizedException, UseGuards, Request, Req, UploadedFile, UseInterceptors } from '@nestjs/common';
+import {Res, Controller, Get, Post, Body, Patch, Param, Delete, UnauthorizedException, UseGuards, Req, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/guard/AuthGuard';
@@ -6,6 +6,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'src/lib/multer.config';
+import { Request, Response } from 'express';
 
 @ApiTags('user')
 @Controller('users')
@@ -17,33 +18,46 @@ export class UsersController {
   @ApiResponse({ status: 201, description: 'The user has been successfully created.' })
   @ApiResponse({ status: 400, description: 'Bad request.' })
   async create(@Body() createUserDto: CreateUserDto) {
+    try{
     console.log(createUserDto)
     return this.usersService.create(createUserDto);
+    }catch(error){
+      console.log('error 발생')
+    }
   }
 
 
   @Get('profile')
-  async getProfile(@Request() req) {
-    const user = await this.usersService.verifyToken(req.cookies.token);
-    console.log(user)
-    const users = await this.usersService.getUserById(user);
-    return users;
+  async getProfile(@Req() req:Request) {
+    try{
+      const user = await this.usersService.verifyToken(req.cookies.token);
+      // console.log(user)
+      const users = await this.usersService.getUserById(user);
+      return users;
+    }catch(error){
+      throw new UnauthorizedException('유효하지않은 토큰')
+    }
   }
 
-  @Get('modify')
-  async getProfileModify(@Request() req) {
-    const user = await this.usersService.verifyToken(req.cookies.token);
-    console.log(user)
-    const users = await this.usersService.getUserById(user);
-    return users;
-  }
+  @Get('modify/get')
+  async getProfileModify(@Req() req:Request) {
+      try{
+        const user = await this.usersService.verifyToken(req.cookies.token);
+        // console.log(user)
+        const users = await this.usersService.getUserById(user);
+        return users;
+      }catch(error){
+        throw new UnauthorizedException('유효하지않은 토큰')
+      }
+    }
 
 
-  @Post('modify')
+  @Post('modify/update')
   @UseInterceptors(FileInterceptor('profile', multerOptions))
   async updateUser(
     @UploadedFile() file:Express.Multer.File,
-    @Req() req,
+    @Res() res: Response,
+    @Req() req: Request,
     @Body() updateUserDto: UpdateUserDto
   ) {
     const user = await this.usersService.verifyToken(req.cookies.token);
@@ -54,6 +68,15 @@ export class UsersController {
       updateUserDto.uprofile = filePath;
     }
 
-    return this.usersService.update(userId, updateUserDto);
+    await this.usersService.update(userId, updateUserDto);
+    console.log('바뀐후 userId', userId)
+    return res.status(200).json({message : "업데이트 성공"})
+  }
+  
+  @Post('logout')
+  async logout(@Req()req:Request, @Res() response: Response){
+    response.clearCookie('token',{ path:'/' });
+
+    return response.status(200).json({message: '로그아웃 성공'});
   }
 }

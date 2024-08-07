@@ -44,32 +44,34 @@ export class UsersService {
 
   async getUserById(userdata: any ): Promise<User> {
     const uid = userdata.username
-    
-    console.log('??', uid)
     return await this.userModel.findOne({ where: {uid} });
   }
   
 
   async verifyToken(token: string) {
     try {
-      return this.jwtService.verify(token); // JWT 검증
+      const user = this.jwtService.verify(token);
+      return user // JWT 검증
     } catch (error) {
-        throw new UnauthorizedException('유효하지 않은 토큰');
+      throw new UnauthorizedException('유효하지 않은 토큰');
     }
-}
+  }
 
 async update(userId: string, updateUserDto: UpdateUserDto): Promise<User> {
   const user = await this.userModel.findOne({ where: { uid: userId } });
   if (!user) {
+    console.log('아이디 찾을수 없음')
     throw new NotFoundException(`아이디를 찾을수 없음.`);
   }
 
   if (updateUserDto.upw) {
-    console.log('넘어옴')
+    console.log('비밀번호 바뀜')
     updateUserDto.upw = await bcrypt.hash(updateUserDto.upw.toString(), this.saltRounds);
   }
 
   await user.update(updateUserDto);
+  console.log('정보바뀜')
   return user;
+  }
 }
-}
+
