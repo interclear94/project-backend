@@ -11,11 +11,7 @@ import { User } from './entities/users.entity';
 @Module({
   imports : [SequelizeModule.forFeature([User]),
   HttpModule,
-<<<<<<< HEAD
   AuthModule
-=======
-  AuthModule,
->>>>>>> jinwoo
 ],
   controllers: [UsersController],
   providers: [UsersService, JwtStrategy],
