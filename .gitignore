@@ -1,5 +1,5 @@
 # compiled output
-/dist
+dist
 /node_modules
 /build
 
@@ -52,7 +52,6 @@ pids
 *.seed
 *.pid.lock
 
-.gitignore
 package-lock.json
 
 # Diagnostic reports (https://nodejs.org/api/report.html)

@@ -14,6 +14,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { ConfigModule } from '@nestjs/config';
 import { BoardModule } from './board/board.module';
+import { User } from './users/entities/users.entity';
 
 @Module({
   imports: [
@@ -23,11 +24,11 @@ import { BoardModule } from './board/board.module';
     HttpModule,
     SequelizeModule.forRoot({
       dialect: 'mysql',
-      host: process.env.MYSQL_USERHOST,
-      port: parseInt(process.env.MYSQL_USERPORT),
-      username: process.env.MYSQL_USERNAME,
-      password: process.env.MYSQL_USERPW,
-      database: process.env.MYSQL_USERDB,
+      host: "localhost",
+      port: 3306,
+      username: "root",
+      password: "189189",
+      database: "projectdatabase",
       sync: { force: false },
       autoLoadModels: true,
       synchronize: true,
@@ -36,9 +37,9 @@ import { BoardModule } from './board/board.module';
     UsersModule,
     AuthModule,
     DetailPageModule,
+    BoardModule,
     CommentModule,
     LikesModule,
-    BoardModule,
     FaqModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'static'),

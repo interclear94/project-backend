@@ -1,4 +1,4 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
@@ -11,9 +11,14 @@ import { User } from './entities/users.entity';
 @Module({
   imports : [SequelizeModule.forFeature([User]),
   HttpModule,
+<<<<<<< HEAD
   AuthModule
+=======
+  AuthModule,
+>>>>>>> jinwoo
 ],
   controllers: [UsersController],
-  providers: [UsersService,JwtStrategy],
+  providers: [UsersService, JwtStrategy],
+  exports : [UsersModule]
 })
 export class UsersModule {}

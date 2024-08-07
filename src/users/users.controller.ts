@@ -1,12 +1,20 @@
+<<<<<<< HEAD
 import {Res, Controller, Get, Post, Body, Patch, Param, Delete, UnauthorizedException, UseGuards, Req, UploadedFile, UseInterceptors } from '@nestjs/common';
+=======
+import {Res, Controller, Get, Post, Body, Patch, Param, Delete, UnauthorizedException, UseGuards, Req } from '@nestjs/common';
+>>>>>>> jinwoo
 import { UsersService } from './users.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/guard/AuthGuard';
 import { CreateUserDto } from './dto/create-user.dto';
+<<<<<<< HEAD
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'src/lib/multer.config';
 import { Request, Response } from 'express';
+=======
+import { Request } from 'express';
+>>>>>>> jinwoo
 
 @ApiTags('user')
 @Controller('users')
@@ -28,6 +36,7 @@ export class UsersController {
 
 
   @Get('profile')
+<<<<<<< HEAD
   async getProfile(@Req() req:Request) {
     try{
       const user = await this.usersService.verifyToken(req.cookies.token);
@@ -60,6 +69,9 @@ export class UsersController {
     @Req() req: Request,
     @Body() updateUserDto: UpdateUserDto
   ) {
+=======
+  async getProfile(@Req() req : Request) {
+>>>>>>> jinwoo
     const user = await this.usersService.verifyToken(req.cookies.token);
     const userId = user.username;
     
