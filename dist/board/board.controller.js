@@ -11,7 +11,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var _a, _b, _c, _d, _e, _f;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BoardController = void 0;
 const common_1 = require("@nestjs/common");
@@ -19,7 +18,6 @@ const board_service_1 = require("./board.service");
 const create_board_dto_1 = require("./dto/create-board.dto");
 const swagger_1 = require("@nestjs/swagger");
 const board_entity_1 = require("./entities/board.entity");
-const express_1 = require("express");
 const platform_express_1 = require("@nestjs/platform-express");
 const multer_config_1 = require("../lib/multer.config");
 const users_service_1 = require("../users/users.service");
@@ -106,7 +104,7 @@ __decorate([
     __param(3, (0, common_1.Res)()),
     __param(4, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_board_dto_1.CreateBoardDto, Object, String, typeof (_a = typeof express_1.Response !== "undefined" && express_1.Response) === "function" ? _a : Object, typeof (_b = typeof express_1.Request !== "undefined" && express_1.Request) === "function" ? _b : Object]),
+    __metadata("design:paramtypes", [create_board_dto_1.CreateBoardDto, Object, String, Object, Object]),
     __metadata("design:returntype", Promise)
 ], BoardController.prototype, "create", null);
 __decorate([
@@ -117,7 +115,7 @@ __decorate([
     __param(1, (0, common_1.Query)('offset')),
     __param(2, (0, common_1.Res)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, typeof (_c = typeof express_1.Response !== "undefined" && express_1.Response) === "function" ? _c : Object]),
+    __metadata("design:paramtypes", [String, String, Object]),
     __metadata("design:returntype", Promise)
 ], BoardController.prototype, "findAll", null);
 __decorate([
@@ -129,7 +127,7 @@ __decorate([
     __param(2, (0, common_1.Param)('category')),
     __param(3, (0, common_1.Res)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, String, typeof (_d = typeof express_1.Response !== "undefined" && express_1.Response) === "function" ? _d : Object]),
+    __metadata("design:paramtypes", [String, String, String, Object]),
     __metadata("design:returntype", Promise)
 ], BoardController.prototype, "findCategory", null);
 __decorate([
@@ -141,7 +139,7 @@ __decorate([
     __param(2, (0, common_1.Query)('offset')),
     __param(3, (0, common_1.Res)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, String, typeof (_e = typeof express_1.Response !== "undefined" && express_1.Response) === "function" ? _e : Object]),
+    __metadata("design:paramtypes", [String, String, String, Object]),
     __metadata("design:returntype", Promise)
 ], BoardController.prototype, "searchController", null);
 __decorate([
@@ -149,7 +147,7 @@ __decorate([
     (0, swagger_1.ApiOperation)({ summary: "쿠키 존재하는지 확인" }),
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [typeof (_f = typeof express_1.Request !== "undefined" && express_1.Request) === "function" ? _f : Object]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], BoardController.prototype, "cookieCheckController", null);
 exports.BoardController = BoardController = __decorate([
