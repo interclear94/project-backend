@@ -21,7 +21,7 @@ export class LikesService {
   // 좋아요 토글
   async updateLikeStatus(boardId: number, category: string, uid: string) : Promise<string> {
     const existingLike = await this.LikeEntity.findOne({
-      where: {uid, category}
+      where: {boardId, uid, category}
     });
 
     if(existingLike) {
