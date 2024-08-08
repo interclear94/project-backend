@@ -2,6 +2,7 @@ export interface IReply {
     id:number,
     uid:string,
     unickname:string,
+    uprofile:string,
     boardId:number,
     category:string,
     replyContent:string,
