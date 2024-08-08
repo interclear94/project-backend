@@ -41,6 +41,7 @@ const sequelize_1 = require("@nestjs/sequelize");
 const bcrypt = __importStar(require("bcrypt"));
 const jwt_1 = require("@nestjs/jwt");
 const users_entity_1 = require("./entities/users.entity");
+const sequelize_2 = require("sequelize");
 let UsersService = class UsersService {
     constructor(userModel, jwtService) {
         this.userModel = userModel;
@@ -48,11 +49,35 @@ let UsersService = class UsersService {
         this.saltRounds = 10;
     }
     async create(createUserDto) {
-        console.log(createUserDto.uid);
+        console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+        await this.createCheck(createUserDto);
         const { uid, upw, unickname, uemail, uphone } = createUserDto;
-        console.log('생성 완료');
         const hashPw = await bcrypt.hash(upw.toString(), 10);
+        console.log('생성 완료');
         return this.userModel.create({ uid, upw: hashPw, unickname, uemail, uphone });
+    }
+    async createCheck(createUserDto) {
+        console.log('------------------------');
+        const { unickname, uemail, uphone } = createUserDto;
+        const usercheck = await this.userModel.findOne({ where: { [sequelize_2.Op.or]: [{ unickname }, { uemail }, { uphone }] } });
+        console.log('여기');
+        console.log(usercheck);
+        console.log('여기');
+        console.log(unickname);
+        if (usercheck) {
+            if (usercheck.unickname === unickname) {
+                console.log('닉네임 중복');
+                throw new common_1.UnauthorizedException('닉네임 중복');
+            }
+            if (usercheck.uemail === uemail) {
+                console.log('이메일 중복');
+                throw new common_1.UnauthorizedException('이메일 중복');
+            }
+            if (usercheck.uphone === uphone) {
+                console.log('휴대폰 중복');
+                throw new common_1.UnauthorizedException('휴대폰 중복');
+            }
+        }
     }
     async validateUser(loginUserDto) {
         const { uid, upw } = loginUserDto;
@@ -69,6 +94,15 @@ let UsersService = class UsersService {
     async getUserById(userdata) {
         const uid = userdata.username;
         return await this.userModel.findOne({ where: { uid } });
+    }
+    async userIdCheck(uid) {
+        const userInfo = await this.userModel.findOne({ where: { uid }, attributes: ['uid', 'unickname', 'uprofile', 'isadmin'] });
+        if (userInfo) {
+            return userInfo;
+        }
+        else {
+            return null;
+        }
     }
     async verifyToken(token) {
         try {

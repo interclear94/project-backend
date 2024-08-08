@@ -1,4 +1,4 @@
-import {Res, Controller, Get, Post, Body, Patch, Param, Delete, UnauthorizedException, UseGuards, Req, UploadedFile, UseInterceptors } from '@nestjs/common';
+import {Res, Controller, Get, Post, Body, Patch, Param, Delete, UnauthorizedException, UseGuards, Req, UploadedFile, UseInterceptors, Header, Headers } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/guard/AuthGuard';
@@ -19,17 +19,22 @@ export class UsersController {
   @ApiResponse({ status: 400, description: 'Bad request.' })
   async create(@Body() createUserDto: CreateUserDto) {
     try{
-    console.log(createUserDto)
     return this.usersService.create(createUserDto);
     }catch(error){
       console.log('error 발생')
     }
   }
 
+  @Post('signup/idcheck')
+  async getUseridCheck(@Headers('uid') uid : any) {
+    const userId = await this.usersService.userIdCheck(uid)
+    console.log(userId)
+    return userId
+  } 
 
   @Get('profile')
   async getProfile(@Req() req:Request) {
-    try{
+    try{1
       const user = await this.usersService.verifyToken(req.cookies.token);
       console.log(user)
       const users = await this.usersService.getUserById(user);

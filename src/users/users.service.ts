@@ -5,6 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from './entities/users.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto, LoginUserDto } from './dto/create-user.dto';
+import { Op } from 'sequelize';
 
 
 @Injectable()
@@ -18,14 +19,43 @@ export class UsersService {
   private readonly saltRounds = 10;
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    console.log(createUserDto.uid);
-    
+    console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+    await this.createCheck(createUserDto); // 중복확인
+
     const {uid, upw, unickname, uemail, uphone} = createUserDto
-    console.log('생성 완료')
+
     const hashPw = await bcrypt.hash(upw.toString(), 10)
     
+    console.log('생성 완료')
     return this.userModel.create({uid, upw : hashPw, unickname, uemail, uphone});
   }
+
+  async createCheck(createUserDto: CreateUserDto): Promise<void>{
+    console.log('------------------------')
+    const { unickname, uemail, uphone } = createUserDto
+    const usercheck = await this.userModel.findOne({ where: {[Op.or]: [ {unickname}, {uemail}, {uphone}]}});
+    
+    console.log('여기')
+    console.log(usercheck)
+    console.log('여기')
+    console.log(unickname)
+  if(usercheck){
+    if(usercheck.unickname === unickname){
+      console.log('닉네임 중복')
+      throw new UnauthorizedException('닉네임 중복')
+    }
+
+    if(usercheck.uemail === uemail){
+      console.log('이메일 중복')
+      throw new UnauthorizedException('이메일 중복')
+    }
+  
+    if(usercheck.uphone === uphone){
+      console.log('휴대폰 중복')
+      throw new UnauthorizedException('휴대폰 중복')
+    }
+  }
+}
 
   async validateUser(loginUserDto: LoginUserDto): Promise<User> {
     const { uid, upw } = loginUserDto;
@@ -45,6 +75,16 @@ export class UsersService {
   async getUserById(userdata: any ): Promise<User> {
     const uid = userdata.username
     return await this.userModel.findOne({ where: {uid} });
+  }
+
+  async userIdCheck(uid: string): Promise<User>{
+    const userInfo = await this.userModel.findOne({ where: { uid }, attributes:['uid', 'unickname', 'uprofile','isadmin']});
+    if(userInfo) {
+      return userInfo
+    } else {
+      return null
+    }
+
   }
   
 

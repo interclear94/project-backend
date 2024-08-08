@@ -26,15 +26,20 @@ let UsersController = class UsersController {
     }
     async create(createUserDto) {
         try {
-            console.log(createUserDto);
             return this.usersService.create(createUserDto);
         }
         catch (error) {
             console.log('error 발생');
         }
     }
+    async getUseridCheck(uid) {
+        const userId = await this.usersService.userIdCheck(uid);
+        console.log(userId);
+        return userId;
+    }
     async getProfile(req) {
         try {
+            1;
             const user = await this.usersService.verifyToken(req.cookies.token);
             console.log(user);
             const users = await this.usersService.getUserById(user);
@@ -82,6 +87,13 @@ __decorate([
     __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "create", null);
+__decorate([
+    (0, common_1.Post)('signup/idcheck'),
+    __param(0, (0, common_1.Headers)('uid')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "getUseridCheck", null);
 __decorate([
     (0, common_1.Get)('profile'),
     __param(0, (0, common_1.Req)()),

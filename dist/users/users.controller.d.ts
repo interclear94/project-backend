@@ -6,6 +6,7 @@ export declare class UsersController {
     private readonly usersService;
     constructor(usersService: UsersService);
     create(createUserDto: CreateUserDto): Promise<import("./entities/users.entity").User>;
+    getUseridCheck(uid: any): Promise<import("./entities/users.entity").User>;
     getProfile(req: Request): Promise<import("./entities/users.entity").User>;
     getProfileModify(req: Request): Promise<import("./entities/users.entity").User>;
     updateUser(file: Express.Multer.File, res: Response, req: Request, updateUserDto: UpdateUserDto): Promise<Response<any, Record<string, any>>>;
