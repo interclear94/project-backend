@@ -103,6 +103,9 @@ export class Board extends Model<Board> {
     // @BelongsTo(() => User, { foreignKey: 'unickname' })
     // userNickname!: User;
 
+    // @BelongsTo(() => User, { foreignKey: 'uProfile' })
+    // userProfile: User;
+
     // 본문과 댓글 연결
     @HasMany(()=> Reply)
     comments!:Reply[];
