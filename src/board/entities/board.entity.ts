@@ -28,7 +28,7 @@ export class Board extends Model<Board> {
 
     // 본문
     @Column({
-        type: DataType.STRING,
+        type: DataType.TEXT,
         allowNull: false,
     })
     boardContent!: string;
@@ -56,6 +56,14 @@ export class Board extends Model<Board> {
         allowNull: false,
     })
     unickname!: string;
+
+    // 유저 프로필 사진
+    // @ForeignKey(()=> User)
+    @Column({
+        type: DataType.STRING,
+        allowNull: true,
+    })
+    uprofile?: string;
 
     // 카테고리
     @Column({
@@ -85,7 +93,7 @@ export class Board extends Model<Board> {
         allowNull: false,
         defaultValue : 0
     })
-    numberOfComment : number;
+    numberOfComment! : number;
 
     // User table의 uid와 Borad table의 uid를 연결
     // @BelongsTo(() => User, { foreignKey: 'uid' })
@@ -94,6 +102,9 @@ export class Board extends Model<Board> {
 
     // @BelongsTo(() => User, { foreignKey: 'unickname' })
     // userNickname!: User;
+
+    // @BelongsTo(() => User, { foreignKey: 'uProfile' })
+    // userProfile: User;
 
     // 본문과 댓글 연결
     @HasMany(()=> Reply)

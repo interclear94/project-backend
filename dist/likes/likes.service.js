@@ -28,7 +28,7 @@ let LikesService = class LikesService {
     }
     async updateLikeStatus(boardId, category, uid) {
         const existingLike = await this.LikeEntity.findOne({
-            where: { uid, category }
+            where: { boardId, uid, category }
         });
         if (existingLike) {
             await existingLike.destroy();

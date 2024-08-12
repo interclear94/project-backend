@@ -14,7 +14,7 @@ export class AuthService {
     async validateUser(uid: string, pass: string): Promise<any> {
         const loginUserDto: LoginUserDto = { uid, upw: pass };
         try{
-        const user = await this.usersService.validateUser(loginUserDto);
+            const user = await this.usersService.validateUser(loginUserDto);
         if (user) {
             const { upw, ...result } = user;
             return result;
@@ -27,7 +27,7 @@ export class AuthService {
     }
 
     login(user:any){
-        const payload = { username: user.dataValues.uid, sub: user.dataValues.unickname};
+        const payload = { username: user.dataValues.uid, sub: user.dataValues.unickname, profile: user.dataValues.uprofile};
 
         return this.jwtService.sign(payload);
     }

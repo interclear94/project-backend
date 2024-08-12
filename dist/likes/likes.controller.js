@@ -38,14 +38,15 @@ let LikesController = class LikesController {
             }
         }
     }
-    async findUserLikeInfo(userToken, boardId, category, res) {
-        const isLike = await this.likesService.WhetherLike(+boardId, category, userToken);
+    async findUserLikeInfo(boardId, category, res, req) {
+        const userinfo = await this.userService.verifyToken(req.cookies.token);
+        const isLike = await this.likesService.WhetherLike(+boardId, category, userinfo.username);
         return res.status(200).json({ message: "조회 성공", isLike });
     }
 };
 exports.LikesController = LikesController;
 __decorate([
-    (0, common_1.Post)(":id/LikeUpdate"),
+    (0, common_1.Post)("LikeUpdate/:category/:id"),
     (0, swagger_1.ApiOperation)({ summary: "좋아요" }),
     (0, swagger_1.ApiResponse)({ status: 201, description: "좋아요 업데이트 성공" }),
     __param(0, (0, common_1.Headers)(`userToken`)),
@@ -58,20 +59,24 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], LikesController.prototype, "likeToggle", null);
 __decorate([
-    (0, common_1.Get)(':id/whetherLike'),
+    (0, common_1.Get)('whetherLike/:category/:id'),
     (0, swagger_1.ApiOperation)({ summary: "좋아요 했는지 확인" }),
     (0, swagger_1.ApiResponse)({ status: 200, description: "좋아요 조회 성공" }),
-    __param(0, (0, common_1.Headers)(`userToken`)),
-    __param(1, (0, common_1.Param)('id')),
-    __param(2, (0, common_1.Param)('category')),
-    __param(3, (0, common_1.Res)()),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Param)('category')),
+    __param(2, (0, common_1.Res)()),
+    __param(3, (0, common_1.Req)()),
     __metadata("design:type", Function),
+<<<<<<< HEAD
     __metadata("design:paramtypes", [String, String, String, Object]),
+=======
+    __metadata("design:paramtypes", [String, String, Object, Object]),
+>>>>>>> taeuk
     __metadata("design:returntype", Promise)
 ], LikesController.prototype, "findUserLikeInfo", null);
 exports.LikesController = LikesController = __decorate([
     (0, swagger_1.ApiTags)("좋아요"),
-    (0, common_1.Controller)('like/:category'),
+    (0, common_1.Controller)('like'),
     __metadata("design:paramtypes", [likes_service_1.LikesService,
         users_service_1.UsersService])
 ], LikesController);

@@ -33,7 +33,7 @@ export class BoardController {
     @Req() req : Request,
     ) : Promise<Response> {
     try {
-     
+    
       const user = await this.userService.verifyToken(req.cookies.token);
 
       // 파일 있을 경우 데이터베이스에 추가할 경로 입력
@@ -45,6 +45,10 @@ export class BoardController {
       // 토큰에서 유저 아이디랑 닉네임 받아오기 (추후 복호화 필요)
       createBoardDto.uid = user.username;
       createBoardDto.unickname = user.sub;
+      if(user.profile) {
+        createBoardDto.uprofile = user.profile
+      }
+ 
 
       await this.boardService.create(createBoardDto, category);
       return res.status(201).json({message: "게시물 생성 성공!", category})

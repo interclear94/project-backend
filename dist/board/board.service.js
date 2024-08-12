@@ -33,9 +33,9 @@ let BoardService = class BoardService {
     }
     async create(createBoardDto, category) {
         try {
-            const { boardTitle, boardContent, uid, unickname, boardFile } = createBoardDto;
+            const { boardTitle, boardContent, uid, unickname, uprofile, boardFile } = createBoardDto;
             return await this.BoardEntity.create({
-                boardTitle, boardContent, uid, unickname, boardFile, categories: category
+                boardTitle, boardContent, uid, unickname, uprofile, boardFile, categories: category
             });
         }
         catch (err) {

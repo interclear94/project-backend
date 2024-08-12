@@ -19,6 +19,7 @@ export class Reply extends Model<Reply>{
  
      // 추후 User 테이블과 관계 맺을 예정
      // 댓글 작성자 아이디
+    //  @ForeignKey(()=> User)
      @Column({
          type : DataType.STRING,
          allowNull : false
@@ -26,11 +27,20 @@ export class Reply extends Model<Reply>{
      uid!: string
      
      // 댓글 작성자 닉네임
+    //  @ForeignKey(()=> User)
      @Column({
          type : DataType.STRING,
          allowNull : false
      })
      unickname! : string
+
+     // 유저 프로필 사진
+    //  @ForeignKey(()=> User)
+     @Column({
+        type: DataType.STRING,
+        allowNull: true,
+     })
+     uprofile?: string;
  
      // 본문 글 인덱스
      @ForeignKey(()=>Board)
@@ -69,6 +79,18 @@ export class Reply extends Model<Reply>{
      })
      replyFile?: string
  
+
+     // User table의 uid와 Comment table의 유저 정보를 연결
+    //  @BelongsTo(() => User, { as: 'commentUid',foreignKey: 'uid' })
+    //  commentUser!: User;
+
+
+    //  @BelongsTo(() => User, { as: 'commentUnickname', foreignKey: 'unickname' })
+    //  commentUserNickname!: User;
+
+    //  @BelongsTo(() => User, { as: 'commentUprofile', foreignKey: 'uprofile' })
+    //  commentUserProfile: User;
+    
      // 본문과 댓글 연결
      @BelongsTo(()=>Board)
      board!: Board;
