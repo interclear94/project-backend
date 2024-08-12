@@ -34,7 +34,7 @@ __decorate([
 ], Board.prototype, "boardTitle", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
-        type: sequelize_typescript_1.DataType.STRING,
+        type: sequelize_typescript_1.DataType.TEXT,
         allowNull: false,
     }),
     __metadata("design:type", String)

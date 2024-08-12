@@ -49,21 +49,16 @@ let UsersService = class UsersService {
         this.saltRounds = 10;
     }
     async create(createUserDto) {
-        console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
         await this.createCheck(createUserDto);
         const { uid, upw, unickname, uemail, uphone } = createUserDto;
+        const uprofile = '/img/unknown.jpg';
         const hashPw = await bcrypt.hash(upw.toString(), 10);
         console.log('생성 완료');
-        return this.userModel.create({ uid, upw: hashPw, unickname, uemail, uphone });
+        return this.userModel.create({ uid, upw: hashPw, unickname, uemail, uphone, uprofile });
     }
     async createCheck(createUserDto) {
-        console.log('------------------------');
         const { unickname, uemail, uphone } = createUserDto;
         const usercheck = await this.userModel.findOne({ where: { [sequelize_2.Op.or]: [{ unickname }, { uemail }, { uphone }] } });
-        console.log('여기');
-        console.log(usercheck);
-        console.log('여기');
-        console.log(unickname);
         if (usercheck) {
             if (usercheck.unickname === unickname) {
                 console.log('닉네임 중복');

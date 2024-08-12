@@ -28,7 +28,7 @@ export class Board extends Model<Board> {
 
     // 본문
     @Column({
-        type: DataType.STRING,
+        type: DataType.TEXT,
         allowNull: false,
     })
     boardContent!: string;
