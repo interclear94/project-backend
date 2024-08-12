@@ -29,6 +29,8 @@ jobs: # 작업의 단위
 
       - name: build nestjs # 빌드
         run : |
+          cd..
+          ls
           chmod 755 node_modules/.bin
           npm run build
 
