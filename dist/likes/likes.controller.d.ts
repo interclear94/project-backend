@@ -1,6 +1,9 @@
-import { UsersService } from '../users/users.service';
 import { LikesService } from './likes.service';
 import { Request, Response } from 'express';
+<<<<<<< HEAD
+=======
+import { UsersService } from 'src/users/users.service';
+>>>>>>> taeuk
 export declare class LikesController {
     private readonly likesService;
     private readonly userService;
