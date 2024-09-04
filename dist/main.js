@@ -7,7 +7,7 @@ async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     (0, swagget_1.setupSwagger)(app);
     app.enableCors({
-        origin: "http://127.0.0.1:5500",
+        origin: ["http://127.0.0.1:5500", "hwongje.shop"],
         methods: ['GET', 'HEAD', 'PATCH', 'POST', 'DELETE', 'OPTIONS', 'PUT'],
         allowedHeaders: ['Content-Type', 'userToken', 'unickname', 'parentId', 'uid'],
         credentials: true
