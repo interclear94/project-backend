@@ -23,7 +23,7 @@ export class AuthService {
     }catch(err){
         console.error(err)
         throw err
-    }
+        }
     }
 
     login(user:any){

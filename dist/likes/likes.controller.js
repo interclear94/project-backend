@@ -67,11 +67,7 @@ __decorate([
     __param(2, (0, common_1.Res)()),
     __param(3, (0, common_1.Req)()),
     __metadata("design:type", Function),
-<<<<<<< HEAD
-    __metadata("design:paramtypes", [String, String, String, Object]),
-=======
     __metadata("design:paramtypes", [String, String, Object, Object]),
->>>>>>> taeuk
     __metadata("design:returntype", Promise)
 ], LikesController.prototype, "findUserLikeInfo", null);
 exports.LikesController = LikesController = __decorate([

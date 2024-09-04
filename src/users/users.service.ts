@@ -64,7 +64,6 @@ export class UsersService {
     if (!isPasswordMatching) {
       throw new UnauthorizedException('Invalid credentials');
     }
-
     return user;
   } 
 
